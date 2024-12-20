@@ -93,7 +93,7 @@ export default {
 				sex: null,
 				tel: null,
 				email: null,
-				hiredate: new Date(),
+				hiredate: dayjs(new Date()).format("YYYY-MM-DD"),
 				role: null,
 				deptId: null,
 				status: 1
@@ -135,6 +135,7 @@ export default {
 				});
 				if (that.dataForm.id) {
 					that.$http('user/searchById', 'POST', { userId: id }, true, function(resp) {
+						console.log(resp)
 						that.dataForm.username = resp.username;
 						that.dataForm.password = resp.password;
 						that.dataForm.name = resp.name;
@@ -149,7 +150,44 @@ export default {
 				}
 			});
 		},
-		
+		dataFormSubmit:function(){
+			let that=this
+			that.$refs["dataForm"].validate(function(valid){
+				if(valid){
+					let data = {
+						userId: that.dataForm.id,
+						username: that.dataForm.username,
+						password: that.dataForm.password,
+						name: that.dataForm.name,
+						sex: that.dataForm.sex,
+						tel: that.dataForm.tel,
+						email: that.dataForm.email,
+						hiredate: dayjs(that.dataForm.hiredate).format('YYYY-MM-DD'),
+						role: that.dataForm.role,
+						deptId: that.dataForm.deptId,
+						status: that.dataForm.status
+					};
+					that.$http(`user/${!that.dataForm.id?'insert':'update'}`,"POST",data,true,function(resp){
+						if(resp.rows==1){
+							that.$message({
+								message: '操作成功',
+								type: 'success',
+								duration: 1200
+							});
+							that.visible=false
+							that.$emit('refreshDataList');
+						}
+						else{
+							that.$message({
+								message: '操作失败',
+								type: 'error',
+								duration: 1200
+							});
+						}
+					});
+				}
+			})
+		}
 	}
 };
 </script>
