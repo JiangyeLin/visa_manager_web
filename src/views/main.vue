@@ -2,13 +2,12 @@
     <div
         class="site-wrapper"
         :class="{ 'site-sidebar--fold': sidebarFold }"
-
         element-loading-text="拼命加载中"
     >
         <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
             <div class="site-navbar__header">
                 <h1 class="site-navbar__brand">
-                    <a class="site-navbar__brand-lg">医药系统</a>
+                    <a class="site-navbar__brand-lg">医药会员卡管理系统</a>
                     <a class="site-navbar__brand-mini">OA</a>
                 </h1>
             </div>
@@ -54,54 +53,34 @@
                         <SvgIcon name="home" class="icon-svg" />
                         <span slot="title">首页</span>
                     </el-menu-item>
-                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'TeamAppointment' })">
-                        <SvgIcon name="log" class="icon-svg" />
-                        <span slot="title">订单管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="personalAppointment" @click="$router.push({ name: 'PersonalAppointment' })">
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'orderPage' })">
+                    <SvgIcon name="log" class="icon-svg" />
+                    <span slot="title">订单管理</span>
+                  </el-menu-item>
+                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })">
                         <SvgIcon name="log" class="icon-svg" />
                         <span slot="title">会员管理</span>
                     </el-menu-item>
-                  <el-menu-item index="reviewRecord" @click="$router.push({ name: 'storeInfo' })">
-                    <SvgIcon name="pinglun" class="icon-svg" />
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })">
+                    <SvgIcon name="log" class="icon-svg" />
                     <span slot="title">门店管理</span>
                   </el-menu-item>
-                  <el-menu-item index="reviewRecord" @click="$router.push({ name: 'memberCard' })">
-                    <SvgIcon name="pinglun" class="icon-svg" />
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })">
+                    <SvgIcon name="log" class="icon-svg" />
                     <span slot="title">储值卡管理</span>
+                  </el-menu-item>
+                  <el-menu-item index="bi" @click="$router.push({ name: 'BI' })">
+                    <SvgIcon name="tool_fill" class="icon-svg" />
+                    <span slot="title">数据报表</span>
+                  </el-menu-item>
+                  <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
+                    <SvgIcon name="company_fill" class="icon-svg" />
+                    <span slot="title">系统配置</span>
                   </el-menu-item>
                   <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
                     <SvgIcon name="company_fill" class="icon-svg" />
                     <span slot="title">营销管理</span>
                   </el-menu-item>
-                  <el-menu-item index="bi" @click="$router.push({ name: 'BI' })">
-                    <SvgIcon name="tool_fill" class="icon-svg" />
-                    <span slot="title">充值消费查询</span>
-                  </el-menu-item>
-                    <el-menu-item index="personalNotice" @click="$router.push({ name: 'PersonalNotice' })">
-                        <SvgIcon name="shezhi" class="icon-svg" />
-                        <span slot="title">系统管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="pageConf" @click="$router.push({ name: 'PageConf' })">
-                        <SvgIcon name="config" class="icon-svg" />
-                        <span slot="title">系统配置</span>
-                    </el-menu-item> -->
-                         <el-menu-item
-                            index="dept"
-                            @click="$router.push({ name: 'Dept' })"
-                            ref="ABC"
-                        >
-                            <SvgIcon name="company_fill" class="icon-svg" />
-                            <span slot="title">部门管理</span>
-                        </el-menu-item>
-                        <el-menu-item
-                            index="user"
-                            @click="$router.push({ name: 'User' })"
-                        >
-                            <SvgIcon name="user_fill" class="icon-svg" />
-                            <span slot="title">用户管理</span>
-                        </el-menu-item> 
-                  
                 </el-menu>
             </div>
         </aside>
@@ -216,10 +195,8 @@ export default {
             //每次切换页面，重新计算页面高度和内容区高度
             this.resetDocumentClientHeight();
             this.loadSiteContentViewHeight();
-            console.log('计算成功')
 
             if (route.meta.isTab) {
-                console.log('TAB不存在')
                 // tab选中, 不存在先添加
                 var tab = this.mainTabs.filter(item => item.name === route.name)[0];
                 if (!tab) {
@@ -247,11 +224,8 @@ export default {
         },
         logout: function() {
             let that = this;
-            this.$router.push({ name: 'Login' })
-            that.$http('user/logout', 'GET', null, true, function(resp) {
-                localStorage.removeItem('permissions');
-                that.$router.push({ name: 'Login' });
-            });
+          localStorage.removeItem('permissions');
+          that.$router.push({ name: 'Login' });
         },
         updatePasswordHandle: function() {
             this.updatePassowrdVisible = true;
@@ -302,14 +276,13 @@ export default {
     mounted: function() {
         let that = this;
         //加载用户数据
-        that.$http('user/loadUserInfo', 'GET', null, true, function(resp) {
+        that.$http('loadUserInfo', 'GET', null, true, function(resp) {
             let json = resp;
             let name = json.name;
             let photo = json.photo;
             that.name = name;
             that.photo = photo;
         });
-
         that.resetDocumentClientHeight();
         that.loadSiteContentViewHeight();
     }

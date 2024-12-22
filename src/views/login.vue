@@ -2,11 +2,12 @@
     <div class="page">
         <el-row type="flex" justify="center" align="middle" class="container">
             <el-col :lg="14" :xl="7" class="hidden-md-and-down">
-                <el-row class="panel">                 
+                <el-row class="panel">
                     <el-col :span="22">
                         <div class="right">
                             <div class="title-container">
-                                <h2>医药系统</h2>
+                                <h2>医药后台管理系统</h2>
+                                <span>( Ver 1.0 )</span>
                             </div>
                             <div v-if="!qrCodeVisible">
                                 <div class="row">
@@ -30,7 +31,7 @@
                                     <el-button type="primary" class="btn" @click="login">登陆系统</el-button>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </el-col>
                 </el-row>
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-import 'element-plus/lib/theme-chalk/display.css';
+import 'element-plus/lib/theme-chalk/index.css';
 import { isUsername, isPassword } from '../utils/validate.js';
 import router from '../router/index.js';
 export default {
@@ -75,70 +76,30 @@ export default {
             } else {
                 let data = { username: that.username, password: that.password };
                 //发送登陆请求
-                that.$http('/login', 'POST', data, true, function(resp) {
-                    console.log(resp)
-
-                    if (resp!='') {
+                that.$http('login', 'POST', data, true, function(resp) {
+                    if (resp) {
                         //取出Token令牌，保存到storage中
                         let token = resp.token;
-                        console.log(token)
                         localStorage.setItem('token', token);
+                        localStorage.setItem('permissions', JSON.stringify(resp.permissions));
                         //让路由跳转页面，这里的Home是home.vue页面的名字
                         router.push({ name: 'Home' });
 
-                    } 
-                    else {
+                    } else {
                         that.$message({
                             message: '登陆失败',
                             type: 'error',
                             duration: 1200
                         });
                     }
-                    
+
                 });
             }
-            //测试用跳转
-            // router.push({name:'Home'})
-
         },
-        // changeMode: function() {
-        //     let that = this;
-        //     that.qrCodeVisible = !that.qrCodeVisible;
-        //     //加载二维码图片
-        //     if (that.qrCodeVisible) {
-        //         that.loadQRCode();
-        //         //创建刷新二维码定时器
-        //         that.qrCodeTimer = setInterval(function() {
-        //             that.loadQRCode();
-        //         }, 5 * 60 * 1000);
-        //         that.loginTimer = setInterval(function() {
-        //             that.$http('user/wechatLogin', 'POST', { uuid: that.uuid }, true, function(resp) {
-        //                 if (resp.result) {
-        //                     clearInterval(that.qrCodeTimer);
-        //                     clearInterval(that.loginTimer);
-        //                     let permissions = resp.permissions;
-        //                     localStorage.setItem('permissions', permissions);
-        //                     router.push({ name: 'Home' });
-        //                 }
-        //             });
-        //         }, 5000);
-        //     } else {
-        //         //销毁刷新二维码定时器
-        //         clearInterval(that.qrCodeTimer);
-        //         clearInterval(that.loginTimer);
-        //     }
-        // },
-        // //加载二维码图片的封装方法
-        // loadQRCode: function() {
-        //     this.$http('user/createQrCode', 'GET', null, true, resp => {
-        //         this.qrCode = resp.pic;
-        //         this.uuid = resp.uuid;
-        //     });
-        // }
     }
 };
 </script>
 
-<style lang="less" scoped="scoped">
+<style lang="less" scoped>
 @import url('login.less');
 </style>
