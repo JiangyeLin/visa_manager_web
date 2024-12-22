@@ -59,7 +59,7 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="orderNo" header-align="center" align="center" label="订单号" min-width="170" />
+      <el-table-column prop="orderNo" header-align="center" align="center" label="订单号" min-width="170" fixed/>
       <el-table-column prop="amount" header-align="center" align="center" label="订单金额" min-width="170" />
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="270" />
       <el-table-column prop="memberPhone" header-align="center" align="center" label="手机号"  min-width="170" />
@@ -67,6 +67,18 @@
       <el-table-column prop="userName" header-align="center" align="center" label="操作员" min-width="170" />
       <el-table-column prop="remarks" header-align="center" align="center" label="备注" min-width="270" />
       <el-table-column prop="status" header-align="center" align="center" label="订单状态" min-width="270" />
+      <el-table-column header-align="center" align="center" width="200" label="操作">
+        <template #default="scope">
+          <el-button
+              type="text"
+              size="medium"
+              v-if="scope.row.status==='已支付'"
+              @click="handleRefund(scope.row.id)"
+          >
+            退款
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -81,6 +93,8 @@
 </template>
 
 <script>
+import {ElMessage, ElMessageBox} from "element-plus";
+
 export default {
   data: function() {
     return {
@@ -138,6 +152,30 @@ export default {
       this.pageIndex = val;
       this.loadDataList();
     },
+    // handleRefund(id){
+    //   ElMessageBox.prompt(
+    //       '',
+    //       {
+    //         showInput:true,
+    //         inputPlaceholder:'审核码',
+    //         confirmButtonText: '确认',
+    //         cancelButtonText: '取消',
+    //         type: 'warning',
+    //         inputErrorMessage: '无效审核码',
+    //         inputValidator: (value) => {
+    //           if (!value) {
+    //             return '审核码不能为空！'; // 返回错误提示
+    //           }}
+    //       })
+    //       .then(({ value }) => {
+    //         let data={
+    //           orderId:id,
+    //           examineCode:value,
+    //           storeId:this.shopStore.id
+    //         }
+    //
+    //       }).catch(() => {})
+    // },
   },
   mounted() {
     this.loadDataList();

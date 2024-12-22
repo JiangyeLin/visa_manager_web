@@ -2,11 +2,9 @@
   <div>
     <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
       <el-form-item >
-        <el-input v-model="dataForm.name" placeholder="店名" clearable></el-input>
+        <el-input v-model="dataForm.number" placeholder="卡号" clearable></el-input>
       </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.address" placeholder="地址" clearable></el-input>
-      </el-form-item>
+
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
       </el-form-item>
@@ -25,17 +23,14 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="序号" min-width="100"  />
-      <el-table-column prop="name" header-align="center" align="center" label="持卡人/昵称" min-width="170" />
-      <el-table-column prop="address" header-align="center" align="center" label="卡号"   min-width="170" />
-      <el-table-column prop="principalName" header-align="center" align="center" label="卡片类型" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总消费金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总充值金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总实付金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡时间" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡门店" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="初次充值金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="余额" min-width="170" />
+      <el-table-column prop="id" header-align="center" align="center" label="ID" min-width="100"  />
+      <el-table-column prop="number" header-align="center" align="center" label="卡号" min-width="170" />
+      <el-table-column prop="secret" header-align="center" align="center" label="秘钥"   min-width="170"/>
+      <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="170" />
+      <el-table-column prop="effectiveDate" header-align="center" align="center" label="生效日期" min-width="170" />
+      <el-table-column prop="expirationDate" header-align="center" align="center" label="过期时间" min-width="170" />
+      <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="170" />
+      <el-table-column prop="type" header-align="center" align="center" label="类型" min-width="170" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -56,8 +51,7 @@ export default {
       dataForm: {
         order:null,
         orderField:null,
-        name:null,
-        address:null,
+        number:null
       },
       dataList: [],
       pageIndex: 1,
@@ -72,14 +66,13 @@ export default {
       let that = this;
       that.dataListLoading = true;
       let data = {
-        name: that.dataForm.name,
-        address: that.dataForm.address,
+        number:that.dataForm.number,
         page: that.pageIndex,
         size: that.pageSize,
         orderField: that.dataForm.orderField,
         order: that.dataForm.order
       };
-      that.$http('admin/store/page', 'POST', data, true, function (resp) {
+      that.$http('admin/prepaidCard/page', 'POST', data, true, function (resp) {
         that.dataList = resp.records;
         that.totalCount = resp.total;
         that.dataListLoading = false;

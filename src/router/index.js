@@ -9,6 +9,9 @@ import Home from "../views/home.vue"
 import memberPage from "../views/memberPage/index.vue"
 import orderPage from "../views/orderPage/index.vue";
 import storePage from "../views/storePage/index.vue";
+import cardPage from "../views/cardPage/index.vue";
+import storeRecord from "../views/storeRecord/index.vue";
+import cardInfo from "../views/cardInfo/index.vue";
 import NotFound from "../views/404.vue"
 
 
@@ -54,6 +57,33 @@ const routes = [{
 				component: storePage,
 				meta: {
 					title: '门店管理',
+					isTab: true
+				}
+			},
+			{
+				path: '/cardPage',
+				name: 'cardPage',
+				component: cardPage,
+				meta: {
+					title: '储值卡管理',
+					isTab: true
+				}
+			},
+			{
+				path: '/storeRecord',
+				name: 'storeRecord',
+				component: storeRecord,
+				meta: {
+					title: '门店交易记录',
+					isTab: true
+				}
+			},
+			{
+				path: '/cardInfo',
+				name: 'cardInfo',
+				component: cardInfo,
+				meta: {
+					title: '会员卡信息中心',
 					isTab: true
 				}
 			},

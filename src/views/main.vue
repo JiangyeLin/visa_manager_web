@@ -58,21 +58,32 @@
                     <span slot="title">订单管理</span>
                   </el-menu-item>
                     <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })">
-                        <SvgIcon name="log" class="icon-svg" />
+                        <SvgIcon name="admin" class="icon-svg" />
                         <span slot="title">会员管理</span>
                     </el-menu-item>
                   <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })">
-                    <SvgIcon name="log" class="icon-svg" />
+                    <SvgIcon name="company_fill" class="icon-svg" />
                     <span slot="title">门店管理</span>
                   </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })">
-                    <SvgIcon name="log" class="icon-svg" />
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'cardPage' })">
+                    <SvgIcon name="card" class="icon-svg" />
                     <span slot="title">储值卡管理</span>
                   </el-menu-item>
-                  <el-menu-item index="bi" @click="$router.push({ name: 'BI' })">
-                    <SvgIcon name="tool_fill" class="icon-svg" />
-                    <span slot="title">数据报表</span>
-                  </el-menu-item>
+
+                  <el-submenu >
+                    <template #title>
+                      <SvgIcon name="tubiao"   class="icon-svg"/>
+                      <span slot="title">数据报表</span>
+                    </template>
+                    <el-menu-item index="门店交易记录" @click="$router.push({ name: 'storeRecord' })">
+                      <SvgIcon name="tubiao" class="icon-svg" />
+                      <span slot="title">门店交易记录</span>
+                    </el-menu-item>
+                    <el-menu-item index="会员卡信息中心" @click="$router.push({ name: 'cardInfo' })">
+                      <SvgIcon name="tubiao" class="icon-svg" />
+                      <span slot="title">会员卡信息中心</span>
+                    </el-menu-item>
+                  </el-submenu>
                   <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
                     <SvgIcon name="company_fill" class="icon-svg" />
                     <span slot="title">系统配置</span>
@@ -228,7 +239,7 @@ export default {
           that.$router.push({ name: 'Login' });
         },
         updatePasswordHandle: function() {
-            this.updatePassowrdVisible = true;
+            this.updatePasswordVisible = true;
             this.$nextTick(() => {
                 this.$refs.updatePassword.init();
             });

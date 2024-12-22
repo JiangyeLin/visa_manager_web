@@ -25,17 +25,11 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="序号" min-width="100"  />
-      <el-table-column prop="name" header-align="center" align="center" label="持卡人/昵称" min-width="170" />
-      <el-table-column prop="address" header-align="center" align="center" label="卡号"   min-width="170" />
-      <el-table-column prop="principalName" header-align="center" align="center" label="卡片类型" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总消费金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总充值金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总实付金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡时间" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡门店" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="初次充值金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="余额" min-width="170" />
+      <el-table-column prop="id" header-align="center" align="center" label="ID" min-width="100" fixed />
+      <el-table-column prop="name" header-align="center" align="center" label="店名" min-width="170" fixed/>
+      <el-table-column prop="address" header-align="center" align="center" label="地址"   min-width="170" fixed/>
+      <el-table-column prop="principalName" header-align="center" align="center" label="负责人" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="绑定码" min-width="170" fixed/>
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"

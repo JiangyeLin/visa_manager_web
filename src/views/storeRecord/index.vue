@@ -25,17 +25,17 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="序号" min-width="100"  />
-      <el-table-column prop="name" header-align="center" align="center" label="持卡人/昵称" min-width="170" />
-      <el-table-column prop="address" header-align="center" align="center" label="卡号"   min-width="170" />
-      <el-table-column prop="principalName" header-align="center" align="center" label="卡片类型" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总消费金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总充值金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="总实付金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡时间" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡门店" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="初次充值金额" min-width="170" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="余额" min-width="170" />
+      <el-table-column prop="id" header-align="center" align="center" label="序号" min-width="100" fixed />
+      <el-table-column prop="name" header-align="center" align="center" label="日期" min-width="170" />
+      <el-table-column prop="address" header-align="center" align="center" label="充值卡号"   min-width="170" />
+      <el-table-column prop="principalName" header-align="center" align="center" label="单据时间" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="单据编号" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="销售金额" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="充值金额" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="实付金额" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="交易门店" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="收银员" min-width="170" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="卡片类型" min-width="170" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
