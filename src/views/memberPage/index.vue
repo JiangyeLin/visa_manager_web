@@ -25,13 +25,13 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="会员ID" min-width="170" fixed />
+      <el-table-column prop="id" header-align="center" align="center" label="会员ID" min-width="200" fixed />
       <el-table-column prop="nickName" header-align="center" align="center" label="用户昵称" min-width="170" fixed/>
       <el-table-column prop="phoneNumber" header-align="center" align="center" label="手机号" min-width="170" fixed/>
       <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="120" />
-      <el-table-column prop="points" header-align="center" align="center" label="积分" min-width="120" />
-      <el-table-column prop="level" header-align="center" align="center" label="等级" min-width="120" />
-      <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="120" />
+      <el-table-column prop="points" header-align="center" align="center" label="积分" min-width="100" />
+      <el-table-column prop="level" header-align="center" align="center" label="等级" min-width="100" />
+      <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="100" />
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="270" />
     </el-table>
     <el-pagination

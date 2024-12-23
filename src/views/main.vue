@@ -69,7 +69,6 @@
                     <SvgIcon name="card" class="icon-svg" />
                     <span slot="title">储值卡管理</span>
                   </el-menu-item>
-
                   <el-submenu >
                     <template #title>
                       <SvgIcon name="tubiao"   class="icon-svg"/>
@@ -86,11 +85,11 @@
                   </el-submenu>
                   <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
                     <SvgIcon name="company_fill" class="icon-svg" />
-                    <span slot="title">系统配置</span>
+                    <span slot="title">营销管理</span>
                   </el-menu-item>
                   <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
                     <SvgIcon name="company_fill" class="icon-svg" />
-                    <span slot="title">营销管理</span>
+                    <span slot="title">系统配置</span>
                   </el-menu-item>
                 </el-menu>
             </div>

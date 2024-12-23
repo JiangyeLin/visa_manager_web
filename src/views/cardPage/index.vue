@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import {convertToChinaTime} from "../../utils";
+
 export default {
   data: function() {
     return {
@@ -73,7 +75,13 @@ export default {
         order: that.dataForm.order
       };
       that.$http('admin/prepaidCard/page', 'POST', data, true, function (resp) {
-        that.dataList = resp.records;
+        that.dataList=resp.records.map(item => {
+          return {
+            ...item, // 保留其他属性
+            effectiveDate:  convertToChinaTime(item.effectiveDate) ,// 转换时间
+            expirationDate:  convertToChinaTime(item.expirationDate) // 转换时间
+          };
+        })
         that.totalCount = resp.total;
         that.dataListLoading = false;
       });
