@@ -10,7 +10,7 @@ import memberPage from "../views/memberPage/index.vue"
 import orderPage from "../views/orderPage/index.vue";
 import storePage from "../views/storePage/index.vue";
 import cardPage from "../views/cardPage/index.vue";
-import storeRecord from "../views/storeRecord/index.vue";
+import storeTransaction from "../views/storeTransaction/index.vue";
 import cardInfo from "../views/cardInfo/index.vue";
 import NotFound from "../views/404.vue"
 
@@ -70,9 +70,9 @@ const routes = [{
 				}
 			},
 			{
-				path: '/storeRecord',
-				name: 'storeRecord',
-				component: storeRecord,
+				path: '/storeTransaction',
+				name: 'storeTransaction',
+				component: storeTransaction,
 				meta: {
 					title: '门店交易记录',
 					isTab: true

@@ -26,7 +26,11 @@
       <el-table-column prop="id" header-align="center" align="center" label="ID" min-width="100"  />
       <el-table-column prop="number" header-align="center" align="center" label="卡号" min-width="170" />
       <el-table-column prop="secret" header-align="center" align="center" label="秘钥"   min-width="170"/>
-      <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="170" />
+      <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="170" >
+        <template #default="scope" >
+          <span style="text-align: center"> {{(+scope.row.balance).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="effectiveDate" header-align="center" align="center" label="生效日期" min-width="170" />
       <el-table-column prop="expirationDate" header-align="center" align="center" label="过期时间" min-width="170" />
       <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="170" />

@@ -29,7 +29,7 @@
       <el-table-column prop="name" header-align="center" align="center" label="门店" min-width="170" />
       <el-table-column prop="address" header-align="center" align="center" label="地址"   min-width="220" />
       <el-table-column prop="longitude" header-align="center" align="center" label="经度" min-width="120" />
-      <el-table-column prop="latitude" header-align="center" align="center" label="维度" min-width="120" />
+      <el-table-column prop="latitude" header-align="center" align="center" label="纬度" min-width="120" />
       <el-table-column prop="principalName" header-align="center" align="center" label="负责人" min-width="120" />
       <el-table-column prop="bindCode" header-align="center" align="center" label="绑定码" min-width="120" />
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="170" />

@@ -74,7 +74,7 @@
                       <SvgIcon name="tubiao"   class="icon-svg"/>
                       <span slot="title">数据报表</span>
                     </template>
-                    <el-menu-item index="门店交易记录" @click="$router.push({ name: 'storeRecord' })">
+                    <el-menu-item index="门店交易记录" @click="$router.push({ name: 'storeTransaction' })">
                       <SvgIcon name="tubiao" class="icon-svg" />
                       <span slot="title">门店交易记录</span>
                     </el-menu-item>
@@ -83,10 +83,6 @@
                       <span slot="title">会员卡信息中心</span>
                     </el-menu-item>
                   </el-submenu>
-                  <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
-                    <SvgIcon name="company_fill" class="icon-svg" />
-                    <span slot="title">营销管理</span>
-                  </el-menu-item>
                   <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
                     <SvgIcon name="company_fill" class="icon-svg" />
                     <span slot="title">系统配置</span>
@@ -235,6 +231,7 @@ export default {
         logout: function() {
             let that = this;
           localStorage.removeItem('permissions');
+          localStorage.removeItem('token');
           that.$router.push({ name: 'Login' });
         },
         updatePasswordHandle: function() {

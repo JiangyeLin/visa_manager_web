@@ -28,7 +28,11 @@
       <el-table-column prop="id" header-align="center" align="center" label="会员ID" min-width="200" fixed />
       <el-table-column prop="nickName" header-align="center" align="center" label="用户昵称" min-width="170" fixed/>
       <el-table-column prop="phoneNumber" header-align="center" align="center" label="手机号" min-width="170" fixed/>
-      <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="120" />
+      <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="120" >
+        <template #default="scope" >
+          <span style="text-align: center"> {{(+scope.row.balance).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="points" header-align="center" align="center" label="积分" min-width="100" />
       <el-table-column prop="level" header-align="center" align="center" label="等级" min-width="100" />
       <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="100" />
