@@ -23,7 +23,6 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="ID" min-width="100"  />
       <el-table-column prop="number" header-align="center" align="center" label="卡号" min-width="170" />
       <el-table-column prop="secret" header-align="center" align="center" label="秘钥"   min-width="170"/>
       <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="170" >

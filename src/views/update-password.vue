@@ -59,23 +59,21 @@ export default {
 			let that=this
 			that.$refs["dataForm"].validate(function(valid){
 				if(valid){
-					let data={password:that.dataForm.confirmPassword}
-					that.$http("user/updatePassword","POST",data,true,function(resp){
-						if(resp.rows==1){
+					let data={
+            oldPassword:that.dataForm.password,
+            newPassword:that.dataForm.confirmPassword,
+          }
+					that.$http("admin/user","PUT",data,true,function(resp){
+
 							that.$message({
 								message: '密码修改成功',
 								type: 'success',
 								duration: 1200,
 							});
 							that.visible = false;
-						}
-						else{
-							that.$message({
-								message: '密码修改失败',
-								type: 'error',
-								duration: 1200,
-							});
-						}
+              that.$router.push('/login');
+
+
 					})
 				}
 			})

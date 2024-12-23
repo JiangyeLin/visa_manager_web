@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import 'element-plus/lib/theme-chalk/index.css';
 import { isUsername, isPassword } from '../utils/validate.js';
 import router from '../router/index.js';
 export default {

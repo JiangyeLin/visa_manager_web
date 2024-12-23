@@ -64,7 +64,8 @@
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
-        <el-button  size="medium" type="success" @click="exportToExcel">导出</el-button>
+        <el-button  size="medium" type="success" @click="exportToExcel(dataList)">导出当前查询</el-button>
+        <el-button  size="medium" type="success" @click="exportAll">导出全部</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -143,6 +144,7 @@ export default {
       };
       that.$http('admin/report/storeTransactionRecord', 'GET', data, true, function (resp) {
         that.dataList = resp;
+        console.log(that.dataList)
         // that.totalCount = resp.total;
         that.dataListLoading = false;
       });
@@ -169,9 +171,9 @@ export default {
       this.pageIndex = val;
       this.loadDataList();
     },
-    exportToExcel() {
+    exportToExcel(dataList) {
       let tableData = [['序号','日期','充值卡号','单据时间','单据编号','销售金额','充值金额','实付金额','交易门店','收银员','卡片类型','状态']];
-      this.dataList.forEach(item => {
+      dataList.forEach(item => {
         let rowData = [
           item.id,
           item.date,
