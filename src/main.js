@@ -47,8 +47,8 @@ app.config.globalProperties.$echarts = echarts //设置全局变量$echarts
 
 //后端项目的URL根路径
 // let baseUrl = "http://127.0.0.1:8383/"
-let baseUrl = "http://192.168.1.23:8080/"
-// let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
+// let baseUrl = "http://192.168.1.23:8080/"
+let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
 
 
 app.config.globalProperties.$baseUrl = baseUrl //设置全局变量$baseUrl
@@ -73,6 +73,10 @@ app.config.globalProperties.$http = function(url, method, data, async, fun) {
             if (resp.code == 200) {
                 fun(resp.data)
             } else {
+                if(resp.code == 10010) {
+                    localStorage.removeItem('token');
+                    router.push({ name: 'Login' });
+                }
                 ElMessage.error({
                     message: resp.msg,
                     duration: 1200
@@ -88,14 +92,14 @@ app.config.globalProperties.$http = function(url, method, data, async, fun) {
                 });
             } else {
                 let status = e.status
-                // if(e.responseJSON?.code==10002){
-                //     ElMessage.error({
-                //         message: e.responseJSON.msg,
-                //         duration: 1200
-                //     });
-                //     localStorage.removeItem('token');
-                //     router.push({ name: 'Login' });
-                // }
+                if(e.responseJSON?.code==10010){
+                    ElMessage.error({
+                        message: e.responseJSON.msg,
+                        duration: 1200
+                    });
+                    localStorage.removeItem('token');
+                    router.push({ name: 'Login' });
+                }
                 if (status == 401) {
                     router.push({
                         name: 'Login'

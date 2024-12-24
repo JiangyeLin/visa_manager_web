@@ -73,26 +73,26 @@
         </el-select>
       </el-form-item>
       <el-form-item >
-        <el-select
-            v-model="dataForm.order"
-            placeholder="排序方式"
-            size="large"
-            style="width: 100%"
-            @change="searchHandle()"
-            clearable
-        >
-          <el-option
-              key="asc"
-              label="升序"
-              value="asc"
-          />
-          <el-option
-              key="desc"
-              label="降序"
-              value="desc"
-          />
+<!--        <el-select-->
+<!--            v-model="dataForm.order"-->
+<!--            placeholder="排序方式"-->
+<!--            size="large"-->
+<!--            style="width: 100%"-->
+<!--            @change="searchHandle()"-->
+<!--            clearable-->
+<!--        >-->
+<!--          <el-option-->
+<!--              key="asc"-->
+<!--              label="升序"-->
+<!--              value="asc"-->
+<!--          />-->
+<!--          <el-option-->
+<!--              key="desc"-->
+<!--              label="降序"-->
+<!--              value="desc"-->
+<!--          />-->
 
-        </el-select>
+<!--        </el-select>-->
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
