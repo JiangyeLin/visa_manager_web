@@ -211,24 +211,25 @@ export default {
     },
     handleRefund(id){
       let that=this
-      ElMessageBox.prompt(
-          '',
+      ElMessageBox.alert(
+          '确认退款？',
           {
-            showInput:true,
-            inputPlaceholder:'审核码',
+            showCancelButton:true,
             confirmButtonText: '确认',
             cancelButtonText: '取消',
             type: 'warning',
-            inputErrorMessage: '无效审核码',
-            inputValidator: (value) => {
-              if (!value) {
-                return '审核码不能为空！'; // 返回错误提示
-              }}
+            // showInput:true,
+            // inputPlaceholder:'审核码',
+            // inputErrorMessage: '无效审核码',
+            // inputValidator: (value) => {
+            //   if (!value) {
+            //     return '审核码不能为空！'; // 返回错误提示
+            //   }}
           })
           .then(({ value }) => {
             let data={
               orderId:id,
-              examineCode:value,
+              examineCode:'QSXCFT',
               storeId:0
             }
             this.$http('admin/order/refund', 'POST', data, true, function (resp) {

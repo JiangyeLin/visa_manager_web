@@ -1,71 +1,71 @@
 <template>
   <div>
-    <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
-      <el-form-item >
-        <el-input v-model="dataForm.name" placeholder="单据时间" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.cardNumber" placeholder="卡号" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.store" placeholder="交易门店" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.cashier" placeholder="收银员" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
-        <el-select v-model="dataForm.cardType" class="input" placeholder="卡片类型" size="medium" clearable>
-          <el-option label="实体卡" value="true" />
-          <el-option label="虚拟卡" value="false" />
-        </el-select>
-      </el-form-item>
-      <el-form-item >
-        <el-select
-            v-model="dataForm.orderField"
-            placeholder="排序字段"
-            size="large"
-            style="width: 100%"
-            @change="searchHandle()"
-            clearable
-        >
-          <el-option
-              key="amount"
-              label="金额"
-              value="amount"
-          />
-          <el-option
-              key="createTime"
-              label="订单时间"
-              value="createTime"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item >
-        <el-select
-            v-model="dataForm.order"
-            placeholder="排序方式"
-            size="large"
-            style="width: 100%"
-            @change="searchHandle()"
-            clearable
-        >
-          <el-option
-              key="asc"
-              label="升序"
-              value="asc"
-          />
-          <el-option
-              key="desc"
-              label="降序"
-              value="desc"
-          />
 
-        </el-select>
-      </el-form-item>
+    <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
+<!--      <el-form-item >-->
+<!--        <el-input v-model="dataForm.name" placeholder="单据时间" clearable></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item >-->
+<!--        <el-input v-model="dataForm.cardNumber" placeholder="卡号" clearable></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item >-->
+<!--        <el-input v-model="dataForm.store" placeholder="交易门店" clearable></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item >-->
+<!--        <el-input v-model="dataForm.cashier" placeholder="收银员" clearable></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item >-->
+<!--        <el-select v-model="dataForm.cardType" class="input" placeholder="卡片类型" size="medium" clearable>-->
+<!--          <el-option label="实体卡" value="true" />-->
+<!--          <el-option label="虚拟卡" value="false" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item >-->
+<!--        <el-select-->
+<!--            v-model="dataForm.orderField"-->
+<!--            placeholder="排序字段"-->
+<!--            size="large"-->
+<!--            style="width: 100%"-->
+<!--            @change="searchHandle()"-->
+<!--            clearable-->
+<!--        >-->
+<!--          <el-option-->
+<!--              key="amount"-->
+<!--              label="金额"-->
+<!--              value="amount"-->
+<!--          />-->
+<!--          <el-option-->
+<!--              key="createTime"-->
+<!--              label="订单时间"-->
+<!--              value="createTime"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item >-->
+<!--        <el-select-->
+<!--            v-model="dataForm.order"-->
+<!--            placeholder="排序方式"-->
+<!--            size="large"-->
+<!--            style="width: 100%"-->
+<!--            @change="searchHandle()"-->
+<!--            clearable-->
+<!--        >-->
+<!--          <el-option-->
+<!--              key="asc"-->
+<!--              label="升序"-->
+<!--              value="asc"-->
+<!--          />-->
+<!--          <el-option-->
+<!--              key="desc"-->
+<!--              label="降序"-->
+<!--              value="desc"-->
+<!--          />-->
+
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item>
-        <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
-        <el-button  size="medium" type="success" @click="exportToExcel(dataList)">导出当前查询</el-button>
-        <el-button  size="medium" type="success" @click="exportAll">导出全部</el-button>
+<!--        <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>-->
+        <el-button  size="medium" type="success" @click="exportAll">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -82,7 +82,11 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="序号" min-width="200"  />
+      <el-table-column type="index" header-align="center" align="center" width="100" label="序号">
+        <template #default="scope">
+          <span>{{ (pageIndex - 1) * pageSize + scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="memberNickName" header-align="center" align="center" label="持卡人/昵称" min-width="170" />
       <el-table-column prop="cardNumber" header-align="center" align="center" label="卡号"   min-width="170" />
       <el-table-column prop="cardType" header-align="center" align="center" label="卡片类型" min-width="170" />
@@ -90,8 +94,8 @@
       <el-table-column prop="rechargeAmount" header-align="center" align="center" label="总充值金额" min-width="170" />
       <el-table-column prop="actualAmount" header-align="center" align="center" label="总实付金额" min-width="170" />
       <el-table-column prop="createTime" header-align="center" align="center" label="开卡时间" min-width="170" />
-<!--      <el-table-column prop="bindCode" header-align="center" align="center" label="开卡门店" min-width="170" />-->
-<!--      <el-table-column prop="bindCode" header-align="center" align="center" label="初次充值金额" min-width="170" />-->
+      <el-table-column header-align="center" align="center" label="开卡门店" min-width="170" />
+      <el-table-column  header-align="center" align="center" label="初次充值金额" min-width="170" />
       <el-table-column prop="cardBalance" header-align="center" align="center" label="余额" min-width="170" />
     </el-table>
     <el-pagination
@@ -109,8 +113,7 @@
 <script>
 import {convertToChinaTime} from "../../utils";
 import * as XLSX from "xlsx";
-import {saveAs} from "file-saver";
-
+import { saveAs } from "file-saver";
 export default {
   data: function () {
     return {
@@ -126,7 +129,6 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       totalCount: 0,
-      total:null,
       dataListLoading: false,
       dataRule: {}
     };
@@ -139,10 +141,9 @@ export default {
         page: that.pageIndex,
         size: that.pageSize,
         orderField: that.dataForm.orderField,
-        order: that.dataForm.order
+        order: that.dataForm.order,
       };
       that.$http('admin/report/card', 'POST', data, true, function (resp) {
-        that.dataList = resp.records;
         that.dataList=resp.records.map(item => {
           return {
             ...item, // 保留其他属性
@@ -154,9 +155,6 @@ export default {
           };
         })
         that.totalCount = resp.total;
-        if(!that.total){
-          that.total=resp.total
-        }
         that.dataListLoading = false;
       });
     },
@@ -186,7 +184,7 @@ export default {
       let that=this
       let data = {
         page: 1,
-        size: that.total,
+        size: that.totalCount,
       };
       that.$http('admin/report/card', 'POST', data, true, function (resp) {
         let dataList = resp.records;
@@ -205,20 +203,19 @@ export default {
     },
     exportToExcel(dataList) {
       let tableData = [['序号','持卡人/昵称','卡号','卡片类型','总消费金额','总充值金额','总实付金额','开卡时间','开卡门店','初次充值金额','余额']];
-      dataList.forEach(item => {
+      dataList.forEach((item,index) => {
         let rowData = [
-          item.id,
+          index+1,
           item.memberNickName,
           item.cardNumber,
-            item.cardType,
-            item.consumptionAmount,
-            item.rechargeAmount,
-            item.actualAmount,
-          convertToChinaTime(item.createTime),
-            null,
-            null,
-            item.cardBalance
-
+          item.cardType,
+          item.consumptionAmount,
+          item.rechargeAmount,
+          item.actualAmount,
+          item.createTime,
+          null,
+          null,
+          item.cardBalance
         ];
         tableData.push(rowData);
       })
@@ -226,7 +223,7 @@ export default {
       const worksheet = XLSX.utils.aoa_to_sheet(tableData);
       const range = XLSX.utils.decode_range(worksheet['!ref']);
       for (let R = 1; R <= range.e.r; R++) { // 从第 2 行（索引 1）开始
-        worksheet[`A${R + 1}`].t = 'S'; // 序号设为数字
+        worksheet[`A${R + 1}`].t = 'S'; // 序号设为字符串
       }
       worksheet["!cols"] = [
         {wch: 20},  // 序号：宽度 5
@@ -244,7 +241,7 @@ export default {
 
       // 3. 创建工作簿并添加工作表
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "门店交易记录");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "会员卡信息");
 
       // 4. 将工作簿导出为二进制数据
       const excelBuffer = XLSX.write(workbook, {
@@ -256,7 +253,7 @@ export default {
       const blob = new Blob([excelBuffer], {
         type: "application/octet-stream",
       });
-      saveAs(blob, "门店交易记录.xlsx");
+      saveAs(blob, "会员卡信息.xlsx");
     },
   },
   mounted() {

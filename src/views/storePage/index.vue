@@ -25,7 +25,7 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="序号" min-width="100"  />
+      <el-table-column prop="id" header-align="center" align="center" label="id" min-width="100"  />
       <el-table-column prop="name" header-align="center" align="center" label="门店" min-width="170" />
       <el-table-column prop="address" header-align="center" align="center" label="地址"   min-width="220" />
       <el-table-column prop="longitude" header-align="center" align="center" label="经度" min-width="120" />

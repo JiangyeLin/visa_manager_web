@@ -83,10 +83,10 @@
                       <span slot="title">会员卡信息中心</span>
                     </el-menu-item>
                   </el-submenu>
-                  <el-menu-item index="session" @click="$router.push({ name: 'Session' })">
-                    <SvgIcon name="company_fill" class="icon-svg" />
-                    <span slot="title">系统配置</span>
-                  </el-menu-item>
+<!--                  <el-menu-item index="session" @click="$router.push({ name: 'Session' })">-->
+<!--                    <SvgIcon name="company_fill" class="icon-svg" />-->
+<!--                    <span slot="title">系统配置</span>-->
+<!--                  </el-menu-item>-->
                 </el-menu>
             </div>
         </aside>

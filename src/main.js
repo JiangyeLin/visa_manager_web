@@ -88,14 +88,14 @@ app.config.globalProperties.$http = function(url, method, data, async, fun) {
                 });
             } else {
                 let status = e.status
-                if(e.responseJSON?.code==10002){
-                    ElMessage.error({
-                        message: e.responseJSON.msg,
-                        duration: 1200
-                    });
-                    localStorage.removeItem('token');
-                    router.push({ name: 'Login' });
-                }
+                // if(e.responseJSON?.code==10002){
+                //     ElMessage.error({
+                //         message: e.responseJSON.msg,
+                //         duration: 1200
+                //     });
+                //     localStorage.removeItem('token');
+                //     router.push({ name: 'Login' });
+                // }
                 if (status == 401) {
                     router.push({
                         name: 'Login'
