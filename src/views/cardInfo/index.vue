@@ -1,74 +1,91 @@
 <template>
   <div>
-
     <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
-<!--      <el-form-item >-->
-<!--        <el-input v-model="dataForm.name" placeholder="单据时间" clearable></el-input>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item >-->
-<!--        <el-input v-model="dataForm.cardNumber" placeholder="卡号" clearable></el-input>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item >-->
-<!--        <el-input v-model="dataForm.store" placeholder="交易门店" clearable></el-input>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item >-->
-<!--        <el-input v-model="dataForm.cashier" placeholder="收银员" clearable></el-input>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item >-->
-<!--        <el-select v-model="dataForm.cardType" class="input" placeholder="卡片类型" size="medium" clearable>-->
-<!--          <el-option label="实体卡" value="true" />-->
-<!--          <el-option label="虚拟卡" value="false" />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item >-->
-<!--        <el-select-->
-<!--            v-model="dataForm.orderField"-->
-<!--            placeholder="排序字段"-->
-<!--            size="large"-->
-<!--            style="width: 100%"-->
-<!--            @change="searchHandle()"-->
-<!--            clearable-->
-<!--        >-->
-<!--          <el-option-->
-<!--              key="amount"-->
-<!--              label="金额"-->
-<!--              value="amount"-->
-<!--          />-->
-<!--          <el-option-->
-<!--              key="createTime"-->
-<!--              label="订单时间"-->
-<!--              value="createTime"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item >-->
-<!--        <el-select-->
-<!--            v-model="dataForm.order"-->
-<!--            placeholder="排序方式"-->
-<!--            size="large"-->
-<!--            style="width: 100%"-->
-<!--            @change="searchHandle()"-->
-<!--            clearable-->
-<!--        >-->
-<!--          <el-option-->
-<!--              key="asc"-->
-<!--              label="升序"-->
-<!--              value="asc"-->
-<!--          />-->
-<!--          <el-option-->
-<!--              key="desc"-->
-<!--              label="降序"-->
-<!--              value="desc"-->
-<!--          />-->
-
-<!--        </el-select>-->
-<!--      </el-form-item>-->
       <el-form-item>
-<!--        <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>-->
+        <el-date-picker
+            @change="dateChange"
+            v-model="dataForm.date"
+            type="datetimerange"
+            value-format="yyyy-MM-dd"
+            range-separator="——"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            placeholder="日期选择"
+            unlink-panels
+        />
+      </el-form-item>
+      <el-form-item >
+        <el-input v-model="dataForm.memberPhoneNumber" placeholder="持卡人手机号" clearable></el-input>
+      </el-form-item>
+      <el-form-item >
+        <el-input v-model="dataForm.cardNumber" placeholder="卡号" clearable></el-input>
+      </el-form-item>
+      <el-form-item >
+        <el-select v-model="dataForm.cardType"  placeholder="卡片类型" size="medium" clearable>
+          <el-option label="电子卡" value=0 />
+          <el-option label="实体卡" value=1 />
+        </el-select>
+      </el-form-item>
+      <el-form-item >
+        <el-select
+            v-model="dataForm.orderField"
+            placeholder="排序字段"
+            size="large"
+            style="width: 100%"
+            @change="searchHandle()"
+            clearable
+        >
+          <el-option
+              key="rechargeAmount"
+              label="总充值金额"
+              value="rechargeAmount"
+          />
+          <el-option
+              key="consumptionAmount"
+              label="总消费金额"
+              value="consumptionAmount"
+          />
+          <el-option
+              key="actualAmount"
+              label="总实付金额"
+              value="actualAmount"
+          />
+          <el-option
+              key="cardBalance"
+              label="余额"
+              value="cardBalance"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item >
+        <el-select
+            v-model="dataForm.order"
+            placeholder="排序方式"
+            size="large"
+            style="width: 100%"
+            @change="searchHandle()"
+            clearable
+        >
+          <el-option
+              key="asc"
+              label="升序"
+              value="asc"
+          />
+          <el-option
+              key="desc"
+              label="降序"
+              value="desc"
+          />
+
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
         <el-button  size="medium" type="success" @click="exportAll">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
+        @header-dragend="handleDrag"
         :data="dataList"
         border
         v-loading="dataListLoading"
@@ -82,21 +99,22 @@
           align="center"
           width="50"
       />
-      <el-table-column type="index" header-align="center" align="center" width="100" label="序号">
+      <el-table-column type="index" header-align="center" align="center" :width="tableWidth[0]" label="序号">
         <template #default="scope">
           <span>{{ (pageIndex - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="memberNickName" header-align="center" align="center" label="持卡人/昵称" min-width="170" />
-      <el-table-column prop="cardNumber" header-align="center" align="center" label="卡号"   min-width="170" />
-      <el-table-column prop="cardType" header-align="center" align="center" label="卡片类型" min-width="170" />
-      <el-table-column prop="consumptionAmount" header-align="center" align="center" label="总消费金额" min-width="170"/>
-      <el-table-column prop="rechargeAmount" header-align="center" align="center" label="总充值金额" min-width="170" />
-      <el-table-column prop="actualAmount" header-align="center" align="center" label="总实付金额" min-width="170" />
-      <el-table-column prop="createTime" header-align="center" align="center" label="开卡时间" min-width="170" />
-      <el-table-column header-align="center" align="center" label="开卡门店" min-width="170" />
-      <el-table-column  header-align="center" align="center" label="初次充值金额" min-width="170" />
-      <el-table-column prop="cardBalance" header-align="center" align="center" label="余额" min-width="170" />
+      <el-table-column prop="memberNickName" header-align="center" align="center" label="持卡人昵称" :width="tableWidth[1]" />
+      <el-table-column prop="memberPhoneNumber" header-align="center" align="center" label="持卡人手机号" :width="tableWidth[2]" />
+      <el-table-column prop="cardNumber" header-align="center" align="center" label="卡号"   :width="tableWidth[3]" />
+      <el-table-column prop="cardType" header-align="center" align="center" label="卡片类型" :width="tableWidth[4]" />
+      <el-table-column prop="consumptionAmount" header-align="center" align="center" label="总消费金额" :width="tableWidth[5]"/>
+      <el-table-column prop="rechargeAmount" header-align="center" align="center" label="总充值金额" :width="tableWidth[6]" />
+      <el-table-column prop="actualAmount" header-align="center" align="center" label="总实付金额" :width="tableWidth[7]" />
+      <el-table-column prop="createTime" header-align="center" align="center" label="开卡时间" :width="tableWidth[8]" />
+      <el-table-column header-align="center" align="center" label="开卡门店" :width="tableWidth[9]" />
+      <el-table-column  header-align="center" align="center" label="初次充值金额" :width="tableWidth[10]" />
+      <el-table-column prop="cardBalance" header-align="center" align="center" label="余额" :width="tableWidth[11]" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -121,27 +139,45 @@ export default {
         order: null,
         orderField: null,
         cardNumber: null,
-        store: null,
-        cashier: null,
-        cardType: null
+        cardType: null,
+        memberPhoneNumber:null,
+        date:null,
+        startTime: null,
+        endTime: null,
       },
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
       totalCount: 0,
       dataListLoading: false,
-      dataRule: {}
+      dataRule: {},
+      tableWidth:[]
     };
   },
   methods: {
+    dateChange(date){
+      if(Array.isArray(date) && date.length > 0){
+        this.dataForm.startTime=date[0];
+        this.dataForm.endTime=date[1]
+      }
+      else{
+        this.dataForm.startTime=null;
+        this.dataForm.endTime=null;
+      }
+    },
     loadDataList: function () {
       let that = this;
       that.dataListLoading = true;
       let data = {
         page: that.pageIndex,
         size: that.pageSize,
-        orderField: that.dataForm.orderField,
-        order: that.dataForm.order,
+        cardNumber:that.dataForm.cardNumber,
+        memberPhoneNumber:that.dataForm.memberPhoneNumber,
+        cardType:that.dataForm.cardType,
+        startTime: that.dataForm.startTime,
+        endTime: that.dataForm.endTime,
+        orderField: that.dataForm.orderField || "",
+        order: that.dataForm.order
       };
       that.$http('admin/report/card', 'POST', data, true, function (resp) {
         that.dataList=resp.records.map(item => {
@@ -185,10 +221,16 @@ export default {
       let data = {
         page: 1,
         size: that.totalCount,
+        cardNumber:that.dataForm.cardNumber,
+        memberPhoneNumber:that.dataForm.memberPhoneNumber,
+        cardType:that.dataForm.cardType,
+        startTime: that.dataForm.startTime,
+        endTime: that.dataForm.endTime,
+        orderField: that.dataForm.orderField || "",
+        order: that.dataForm.order
       };
       that.$http('admin/report/card', 'POST', data, true, function (resp) {
-        let dataList = resp.records;
-        dataList=resp.records.map(item => {
+        let dataList=resp.records.map(item => {
           return {
             ...item, // 保留其他属性
             createTime:  convertToChinaTime(item.createTime) ,// 转换时间
@@ -202,11 +244,12 @@ export default {
       });
     },
     exportToExcel(dataList) {
-      let tableData = [['序号','持卡人/昵称','卡号','卡片类型','总消费金额','总充值金额','总实付金额','开卡时间','开卡门店','初次充值金额','余额']];
+      let tableData = [['序号','持卡人昵称','持卡人手机号','卡号','卡片类型','总消费金额','总充值金额','总实付金额','开卡时间','开卡门店','初次充值金额','余额']];
       dataList.forEach((item,index) => {
         let rowData = [
           index+1,
           item.memberNickName,
+          item.memberPhoneNumber,
           item.cardNumber,
           item.cardType,
           item.consumptionAmount,
@@ -226,17 +269,18 @@ export default {
         worksheet[`A${R + 1}`].t = 'S'; // 序号设为字符串
       }
       worksheet["!cols"] = [
-        {wch: 20},  // 序号：宽度 5
-        {wch: 20}, // 日期：宽度 15
-        {wch: 20}, // 充值卡号：宽度 20
-        {wch: 20}, // 单据时间：宽度 20
-        {wch: 20}, // 单据编号：宽度 15
-        {wch: 10}, // 销售金额：宽度 10
-        {wch: 10}, // 充值金额：宽度 10
-        {wch: 20}, // 实付金额：宽度 10
-        {wch: 20}, // 交易门店：宽度 15
-        {wch: 20}, // 收银员：宽度 10
-        {wch: 10}  // 卡片类型：宽度 10
+        {wch: 10},  // 序号：宽度 5
+        {wch: 15}, // 持卡人昵称：宽度 15
+        {wch: 20}, // 持卡人手机号：宽度 20
+        {wch: 20}, // 卡号：宽度 20
+        {wch: 10}, // 卡片类型：宽度 15
+        {wch: 15}, // 总消费金额：宽度 10
+        {wch: 15}, // 总充值金额：宽度 10
+        {wch: 15}, // 总实付金额：宽度 10
+        {wch: 20}, // 开卡时间：宽度 15
+        {wch: 20}, // 开卡门店 宽度 10
+        {wch: 20},  // 初次充值金额：宽度 10
+        {wch: 15}   //余额
       ];
 
       // 3. 创建工作簿并添加工作表
@@ -255,8 +299,20 @@ export default {
       });
       saveAs(blob, "会员卡信息.xlsx");
     },
+    handleDrag(newWidth, oldWidth, column){
+      this.tableWidth[column.no-1]=newWidth
+      localStorage.setItem('cardInfoWidth',JSON.stringify(this.tableWidth))
+    }
   },
   mounted() {
+    if(localStorage.getItem('cardInfoWidth')){
+      this.tableWidth=JSON.parse(localStorage.getItem('cardInfoWidth'))
+    }
+    else{
+      for(let i=0;i<12;i++){
+        this.tableWidth.push(170)
+      }
+    }
     this.loadDataList();
   }
 

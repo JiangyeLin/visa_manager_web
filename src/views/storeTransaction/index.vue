@@ -3,15 +3,15 @@
     <div class="statistic" >
       <div class="statistic-item">
         <p>销售总金额</p>
-        <p class="statistic-number">{{consumptionAmountTotal}}</p>
+        <p class="statistic-number">￥{{consumptionAmountTotal}}</p>
       </div>
       <div class="statistic-item">
         <p>充值总金额</p>
-        <p class="statistic-number">{{rechargeAmountTotal}}</p>
+        <p class="statistic-number">￥{{rechargeAmountTotal}}</p>
       </div>
       <div class="statistic-item">
         <p>实付总金额</p>
-        <p class="statistic-number">{{actualPayTotal}}</p>
+        <p class="statistic-number">￥{{actualPayTotal}}</p>
       </div>
     </div>
     <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
@@ -22,28 +22,28 @@
             type="datetimerange"
             value-format="yyyy-MM-dd"
             range-separator="——"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
             placeholder="日期选择"
             unlink-panels
         />
       </el-form-item>
       <el-form-item >
-        <el-input v-model="dataForm.name" placeholder="单据时间" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
         <el-input v-model="dataForm.cardNumber" placeholder="卡号" clearable></el-input>
       </el-form-item>
       <el-form-item >
-        <el-input v-model="dataForm.storeName" placeholder="交易门店" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.userName" placeholder="收银员" clearable></el-input>
+        <el-cascader  v-model="dataForm.cascaderValue" @change="cascaderChange" :options="cascaderOption" placeholder="交易门店/收银员"  :props="{ checkStrictly: true }" clearable></el-cascader>
       </el-form-item>
       <el-form-item >
         <el-select v-model="dataForm.cardType"  placeholder="卡片类型" size="medium" clearable>
-          <el-option label="实体卡" value="实体卡" />
-          <el-option label="电子卡" value="电子卡" />
+          <el-option label="电子卡" value=0 />
+          <el-option label="实体卡" value=1 />
+        </el-select>
+      </el-form-item>
+      <el-form-item >
+        <el-select v-model="dataForm.queryType"  @change="typeChange" placeholder="记录类型" size="medium" clearable>
+          <el-option label="销售记录" value=1  :disabled="dataForm.orderField==='rechargeAmount' || dataForm.orderField==='actualPayAmount'" />
+          <el-option label="充值记录" value=2  :disabled="dataForm.orderField==='consumptionAmount'" />
         </el-select>
       </el-form-item>
       <el-form-item >
@@ -52,55 +52,59 @@
             placeholder="排序字段"
             size="large"
             style="width: 100%"
-            @change="searchHandle()"
+            @change="orderFieldChange"
             clearable
         >
           <el-option
               key="consumptionAmount"
               label="销售金额"
               value="consumptionAmount"
+              :disabled="dataForm.queryType==='2'"
           />
           <el-option
               key="rechargeAmount"
               label="充值金额"
               value="rechargeAmount"
+              :disabled="dataForm.queryType==='1'"
           />
           <el-option
               key="actualPayAmount"
               label="实付金额"
               value="actualPayAmount"
+              :disabled="dataForm.queryType==='1'"
           />
         </el-select>
       </el-form-item>
       <el-form-item >
-<!--        <el-select-->
-<!--            v-model="dataForm.order"-->
-<!--            placeholder="排序方式"-->
-<!--            size="large"-->
-<!--            style="width: 100%"-->
-<!--            @change="searchHandle()"-->
-<!--            clearable-->
-<!--        >-->
-<!--          <el-option-->
-<!--              key="asc"-->
-<!--              label="升序"-->
-<!--              value="asc"-->
-<!--          />-->
-<!--          <el-option-->
-<!--              key="desc"-->
-<!--              label="降序"-->
-<!--              value="desc"-->
-<!--          />-->
+        <el-select
+            v-model="dataForm.order"
+            placeholder="排序方式"
+            size="large"
+            style="width: 100%"
 
-<!--        </el-select>-->
+            clearable
+        >
+          <el-option
+              key="asc"
+              label="升序"
+              value="asc"
+          />
+          <el-option
+              key="desc"
+              label="降序"
+              value="desc"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
+        <el-button size="medium" type="warning" @click="clearQuery">清空条件</el-button>
         <el-button  size="medium" type="success" @click="exportAll">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
         :data="dataList"
+        @header-dragend="handleDrag"
         border
         v-loading="dataListLoading"
         :cell-style="{ padding: '4px 0'  }"
@@ -113,22 +117,22 @@
           align="center"
           width="50"
       />
-      <el-table-column type="index" header-align="center" align="center" width="100" label="序号">
+      <el-table-column type="index" header-align="center" align="center" :width="tableWidth[0]" label="序号">
         <template #default="scope">
           <span>{{ (pageIndex - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="date" header-align="center" align="center" label="日期" min-width="170" />
-      <el-table-column prop="cardNumber" header-align="center" align="center" label="卡号"   min-width="170" />
-      <el-table-column prop="createTime" header-align="center" align="center" label="单据时间" min-width="170" />
-      <el-table-column prop="orderNo" header-align="center" align="center" label="单据编号" min-width="170" />
-      <el-table-column prop="consumptionAmount" header-align="center" align="center" label="销售金额" min-width="170" />
-      <el-table-column prop="rechargeAmount" header-align="center" align="center" label="充值金额" min-width="170" />
-      <el-table-column prop="actualPayAmount" header-align="center" align="center" label="实付金额" min-width="170" />
-      <el-table-column prop="storeName" header-align="center" align="center" label="交易门店" min-width="170" />
-      <el-table-column prop="userName" header-align="center" align="center" label="收银员" min-width="170" />
-      <el-table-column prop="cardType" header-align="center" align="center" label="卡片类型" min-width="170" />
-      <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="170" />
+      <el-table-column prop="date" header-align="center" align="center" label="日期" :width="tableWidth[1]" />
+      <el-table-column prop="cardNumber" header-align="center" align="center" label="卡号"   :width="tableWidth[2]" />
+      <el-table-column prop="createTime" header-align="center" align="center" label="单据时间" :width="tableWidth[3]" />
+      <el-table-column prop="orderNo" header-align="center" align="center" label="单据编号" :width="tableWidth[4]" />
+      <el-table-column prop="consumptionAmount" header-align="center" align="center" label="销售金额" :width="tableWidth[5]" />
+      <el-table-column prop="rechargeAmount" header-align="center" align="center" label="充值金额" :width="tableWidth[6]" />
+      <el-table-column prop="actualPayAmount" header-align="center" align="center" label="实付金额" :width="tableWidth[7]" />
+      <el-table-column prop="storeName" header-align="center" align="center" label="交易门店" :width="tableWidth[8]" />
+      <el-table-column prop="userName" header-align="center" align="center" label="收银员" :width="tableWidth[9]" />
+      <el-table-column prop="cardType" header-align="center" align="center" label="卡片类型" :width="tableWidth[10]" />
+      <el-table-column prop="status" header-align="center" align="center" label="状态" :width="tableWidth[11]" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -153,14 +157,18 @@ export default {
         order:null,
         orderField:null,
         cardNumber:null,
-        storeName:null,
-        userName:null,
         cardType:null,
         date:null,
         startTime: null,
         endTime: null,
+        cascaderValue:null,
+        storeId:null,
+        userId:null,
+        queryType: null,
       },
+      cascaderOption:[ ],
       dataList: [],
+      userTree:null,
       pageIndex: 1,
       pageSize: 10,
       totalCount: 0,
@@ -169,6 +177,7 @@ export default {
       consumptionAmountTotal:null,
       rechargeAmountTotal:null,
       actualPayTotal:null,
+      tableWidth:[]
     };
   },
   methods: {
@@ -178,14 +187,16 @@ export default {
       let data = {
         page: that.pageIndex,
         size: that.pageSize,
-        orderField: that.dataForm.orderField,
-        order: that.dataForm.order,
+        orderField: that.dataForm.orderField ,
+        order: that.dataForm.order || 'asc' ,
         cardNumber:that.dataForm.cardNumber,
-        storeName:that.dataForm.storeName,
-        userName: that.dataForm.userName,
         cardType: that.dataForm.cardType,
+        queryType : that.dataForm.queryType || 0,
+        startTime: that.dataForm.startTime,
+        endTime: that.dataForm.endTime,
+        userId: that.dataForm.userId,
+        storeId: that.dataForm.storeId
       };
-
       that.$http('admin/report/storeTransactionRecord', 'POST', data, true, function (resp) {
         that.dataList=resp.page.records.map(item => {
           return {
@@ -202,6 +213,15 @@ export default {
         that.totalCount = resp.page.total;
         that.dataListLoading = false;
       });
+    },
+    orderFieldChange(value){
+      if(value==='consumptionAmount'){
+        this.dataForm.queryType = '1'
+      }
+      if(value === 'rechargeAmount' || value === 'actualPayAmount'){
+        this.dataForm.queryType = '2'
+      }
+      // this.searchHandle()
     },
     searchHandle: function () {
       this.$refs['dataForm'].validate(valid => {
@@ -240,6 +260,15 @@ export default {
       let data = {
         page: 1,
         size: that.totalCount,
+        orderField: that.dataForm.orderField ,
+        order: that.dataForm.order || 'asc' ,
+        cardNumber:that.dataForm.cardNumber,
+        cardType: that.dataForm.cardType,
+        queryType : that.dataForm.queryType || 0,
+        startTime: that.dataForm.startTime,
+        endTime: that.dataForm.endTime,
+        userId: that.dataForm.userId,
+        storeId: that.dataForm.storeId
       };
       that.$http('admin/report/storeTransactionRecord', 'POST', data, true, function (resp) {
         let dataList=resp.page.records.map(item => {
@@ -255,7 +284,7 @@ export default {
       });
     },
     exportToExcel(dataList) {
-      let tableData = [['序号','日期','充值卡号','单据时间','单据编号','销售金额','充值金额','实付金额','交易门店','收银员','卡片类型','状态']];
+      let tableData = [['序号','日期','卡号','单据时间','单据编号','销售金额','充值金额','实付金额','交易门店','收银员','卡片类型','状态']];
       dataList.forEach((item,index) => {
         let rowData = [
           index+1,
@@ -309,8 +338,67 @@ export default {
       });
       saveAs(blob, "门店交易记录.xlsx");
     },
+    handleDrag(newWidth, oldWidth, column){
+      this.tableWidth[column.no-1]=newWidth
+      localStorage.setItem('storeTransWidth',JSON.stringify(this.tableWidth))
+    },
+    typeChange(value){
+      if(value===''){
+        this.dataForm.orderField=null
+      }
+    },
+    clearQuery(){
+      this.dataForm= {
+        order:null,
+        orderField:null,
+        cardNumber:null,
+        cardType:null,
+        date:null,
+        startTime: null,
+        endTime: null,
+        cascaderValue:null,
+        storeId:null,
+        userId:null,
+        queryType: null,
+      }
+    },
+    cascaderChange(value){
+      if(!value){
+        this.dataForm.storeId=null
+        this.dataForm.userId=null
+      }
+      else if( Array.isArray(value) && value.length===1){
+        this.dataForm.storeId=value[0]
+      }
+      else if( Array.isArray(value) && value.length===2){
+        this.dataForm.storeId=value[0]
+        this.dataForm.userId=value[1]
+      }
+    }
   },
   mounted() {
+    let that=this
+    that.$http('admin/store/idlist', 'GET', null, true, function (resp) {
+      that.userTree=resp;
+      that.cascaderOption=that.userTree.map(store => {
+        return {
+          value: store.id,
+          label: store.storeName,
+          children: store.users.map(user => ({
+            value: user.id,
+            label: user.userName
+          }))
+        }
+      });
+    });
+    if(localStorage.getItem('storeTransWidth')){
+      this.tableWidth=JSON.parse(localStorage.getItem('storeTransWidth'))
+    }
+    else{
+      for(let i=0;i<12;i++){
+        this.tableWidth.push(170)
+      }
+    }
     this.loadDataList();
   }
 
