@@ -13,6 +13,7 @@ import cardPage from "../views/cardPage/index.vue";
 import storeTransaction from "../views/storeTransaction/index.vue";
 import cardInfo from "../views/cardInfo/index.vue";
 import NotFound from "../views/404.vue"
+import userPage from "../views/userPage/index.vue";
 
 
 const routes = [{
@@ -87,6 +88,16 @@ const routes = [{
 					isTab: true
 				}
 			},
+			{
+				path: '/userPage',
+				name: 'userPage',
+				component: userPage,
+				meta: {
+					title: '用户管理',
+					isTab: true
+				}
+			},
+
 
 		]
 	},

@@ -69,7 +69,7 @@
                     <SvgIcon name="card" class="icon-svg" />
                     <span slot="title">储值卡管理</span>
                   </el-menu-item>
-                  <el-submenu >
+                  <el-submenu index="数据报表">
                     <template #title>
                       <SvgIcon name="tubiao"   class="icon-svg"/>
                       <span slot="title">数据报表</span>
@@ -83,10 +83,16 @@
                       <span slot="title">会员卡信息中心</span>
                     </el-menu-item>
                   </el-submenu>
-<!--                  <el-menu-item index="session" @click="$router.push({ name: 'Session' })">-->
-<!--                    <SvgIcon name="company_fill" class="icon-svg" />-->
-<!--                    <span slot="title">系统配置</span>-->
-<!--                  </el-menu-item>-->
+                  <el-submenu index="系统配置">
+                    <template #title>
+                      <SvgIcon name="system"   class="icon-svg"/>
+                      <span slot="title">系统配置</span>
+                    </template>
+                    <el-menu-item index="用户管理" @click="$router.push({ name: 'userPage' })">
+                      <SvgIcon name="users_fill" class="icon-svg" />
+                      <span slot="title">用户管理</span>
+                    </el-menu-item>
+                  </el-submenu>
                 </el-menu>
             </div>
         </aside>
@@ -227,9 +233,13 @@ export default {
         },
         logout: function() {
             let that = this;
-          localStorage.removeItem('permissions');
-          localStorage.removeItem('token');
-          that.$router.push({ name: 'Login' });
+          that.$http('logout', 'POST', null, true, function (resp) {
+            localStorage.removeItem('permissions');
+            localStorage.removeItem('token');
+            that.$router.push({ name: 'Login' });
+          });
+
+
         },
         updatePasswordHandle: function() {
             this.updatePasswordVisible = true;
