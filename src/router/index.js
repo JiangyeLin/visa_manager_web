@@ -14,7 +14,7 @@ import storeTransaction from "../views/storeTransaction/index.vue";
 import cardInfo from "../views/cardInfo/index.vue";
 import NotFound from "../views/404.vue"
 import userPage from "../views/userPage/index.vue";
-
+import rolePage from "../views/rolePage/index.vue";
 
 const routes = [{
 		path: '/login',
@@ -94,6 +94,15 @@ const routes = [{
 				component: userPage,
 				meta: {
 					title: '用户管理',
+					isTab: true
+				}
+			},
+			{
+				path: '/rolePage',
+				name: 'rolePage',
+				component: rolePage,
+				meta: {
+					title: '角色管理',
 					isTab: true
 				}
 			},

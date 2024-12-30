@@ -88,6 +88,10 @@
                       <SvgIcon name="system"   class="icon-svg"/>
                       <span slot="title">系统配置</span>
                     </template>
+                    <el-menu-item index="角色管理" @click="$router.push({ name: 'rolePage' })">
+                      <SvgIcon name="tool_fill" class="icon-svg" />
+                      <span slot="title">角色管理</span>
+                    </el-menu-item>
                     <el-menu-item index="用户管理" @click="$router.push({ name: 'userPage' })">
                       <SvgIcon name="users_fill" class="icon-svg" />
                       <span slot="title">用户管理</span>

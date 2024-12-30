@@ -2,25 +2,12 @@
   <div>
     <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
       <el-form-item >
-        <el-select v-model="dataForm.storeId" placeholder="门店" clearable>
-          <el-option
-              v-for="item in storeOption"
-              :key="item.id"
-              :label="item.storeName"
-              :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.userName" placeholder="用户名" clearable></el-input>
-      </el-form-item>
-      <el-form-item >
-        <el-input v-model="dataForm.phoneNumber" placeholder="手机号" clearable></el-input>
+        <el-input v-model="dataForm.userName" placeholder="角色名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
         <el-button size="medium" type="success" @click="addOrUpdate()">新增</el-button>
-        <el-button size="medium" type="danger" @click="deleteHandle()">批量删除</el-button>
+        <el-button size="medium" type="danger" @click="deleteHandle()">删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -43,32 +30,18 @@
           <span>{{ (pageIndex - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="userName" header-align="center" align="center" label='用户名' min-width="120" />
-      <el-table-column prop="phoneNumber" header-align="center" align="center" label='手机号' min-width="170" />
-      <el-table-column prop="storeName" header-align="center" align="center" label='门店' min-width="150" />
-      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="170" />
+      <el-table-column prop="roleName" header-align="center" align="center" label='角色名称' min-width="120" />
+      <el-table-column prop="desc" header-align="center" align="center" label='描述' min-width="170" />
+      <el-table-column prop="users" header-align="center" align="center" label='关联用户' min-width="170" />
+      <el-table-column prop="permissions" header-align="center" align="center" label='权限数量' min-width="170" />
       <el-table-column header-align="center" align="center" min-width="150" label="操作">
         <template #default="scope">
-          <el-button
-              type="text"
-              size="medium"
-              @click="addOrUpdate(scope.row.id)"
-          >
-            更新
-          </el-button>
           <el-button
               type="text"
               size="medium"
               @click="deleteHandle(scope.row.id)"
           >
             删除
-          </el-button>
-          <el-button
-              type="text"
-              size="medium"
-              @click="repass(scope.row.id)"
-          >
-            重置密码
           </el-button>
         </template>
       </el-table-column>
@@ -82,24 +55,22 @@
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <user-add-or-update v-if="addOrUpdateVisible" ref="userAddOrUpdate" @refreshDataList="loadDataList"></user-add-or-update>
+    <role-add-or-update v-if="addOrUpdateVisible" ref="roleAddOrUpdate" @refreshDataList="loadDataList"></role-add-or-update>
   </div>
 </template>
 
 <script>
-import userAddOrUpdate from "./user-add-or-update.vue";
+import roleAddOrUpdate from "./role-add-or-update.vue";
 export default {
   components:{
-    userAddOrUpdate
+    roleAddOrUpdate
   },
   data: function() {
     return {
       dataForm: {
         order:null,
         orderField:null,
-        phoneNumber:null,
-        storeId:null,
-        userName:null
+        roleName:null,
       },
       dataList: [],
       pageIndex: 1,
@@ -107,37 +78,13 @@ export default {
       totalCount: 0,
       dataListLoading: false,
       dataRule: {},
-      addOrUpdateVisible:false,
       dataListSelections: [],
-      storeTree:null,
-      storeOption:[]
+      addOrUpdateVisible:false,
     };
   },
   methods: {
     selectionChangeHandle: function(val) {
       this.dataListSelections = val;
-    },
-    repass:function (id){
-      let that = this;
-      that.$confirm('重置密码：88888888', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        that.$http('admin/user/repass', 'POST', { userId:id }, true, function(resp) {
-            that.$message({
-              message: '操作成功',
-              type: 'success',
-              duration: 1200
-            });
-          that.$http('logout', 'POST', null, true, function (resp) {
-            localStorage.removeItem('permissions');
-            localStorage.removeItem('token');
-            that.$router.push({ name: 'Login' });
-          });
-        });
-      });
-
     },
     deleteHandle: function(id) {
       let that = this;
@@ -153,12 +100,12 @@ export default {
           duration: 1200
         });
       } else {
-        that.$confirm('确定要删除选中的用户？', '提示', {
+        that.$confirm('确定要删除选中的记录？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$http('admin/user', 'DELETE', { ids:ids }, true, function(resp) {
+          that.$http('admin/role', 'DELETE', { ids:ids }, true, function(resp) {
             that.$message({
               message: '操作成功',
               type: 'success',
@@ -169,10 +116,10 @@ export default {
         }).catch(()=>{});
       }
     },
-    addOrUpdate(id){
+    addOrUpdate(){
       this.addOrUpdateVisible=true
       this.$nextTick(() => {
-        this.$refs.userAddOrUpdate.init(id);
+        this.$refs.roleAddOrUpdate.init();
       });
     },
     loadDataList: function () {
@@ -183,11 +130,10 @@ export default {
         size: that.pageSize,
         orderField: that.dataForm.orderField,
         order: that.dataForm.order,
-        phoneNumber:that.dataForm.phoneNumber,
-        storeId:that.dataForm.storeId,
-        userName:that.dataForm.userName,
+        roleName:that.dataForm.roleName
+
       };
-      that.$http('admin/user/page', 'POST', data, true, function (resp) {
+      that.$http('admin/role/page', 'POST', data, true, function (resp) {
         that.dataList=resp.records
         that.totalCount = resp.total;
         that.dataListLoading = false;
@@ -217,12 +163,10 @@ export default {
     },
   },
   mounted() {
-    let that=this
-    this.$http('admin/store/idlist', 'GET', null, true, function (resp) {
-      that.storeOption=resp
-    });
+
     this.loadDataList();
   }
+
 };
 </script>
 

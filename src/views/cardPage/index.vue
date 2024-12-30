@@ -30,10 +30,10 @@
           <span style="text-align: center"> {{(+scope.row.balance).toFixed(2)}}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="type" header-align="center" align="center" label="类型" min-width="170" />
       <el-table-column prop="effectiveDate" header-align="center" align="center" label="生效日期" min-width="170" />
       <el-table-column prop="expirationDate" header-align="center" align="center" label="过期时间" min-width="170" />
       <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="170" />
-      <el-table-column prop="type" header-align="center" align="center" label="类型" min-width="170" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
