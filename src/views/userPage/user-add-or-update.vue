@@ -93,11 +93,12 @@ export default {
           that.storeList = resp;
         });
 				if (that.dataForm.id) {
-          that.$http('/admin/user', 'GET', {id:that.dataForm.id}, true, function(resp) {
-            that.dataForm.userName = resp.username;
+          that.$http('admin/user/'+that.dataForm.id, 'GET', null, true, function(resp) {
+            that.dataForm.userName = resp.userName;
             that.dataForm.phoneNumber = resp.phoneNumber;
-            that.dataForm.storeName= resp.storeName;
-            that.dataForm.roleIds=resp.roles
+            let store=that.storeList.find(item => item.storeName === resp.storeName)
+            that.dataForm.storeId= store.id;
+            that.dataForm.roleIds=resp.roles.map(Number)
           });
 				}
 			});

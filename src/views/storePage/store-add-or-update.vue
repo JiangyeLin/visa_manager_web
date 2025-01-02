@@ -7,28 +7,36 @@
     v-loading="loading"
 	>
 		<el-form :model="dataForm" ref="dataForm" :rules="dataRule" label-width="80px">
-			<el-form-item label="名称" prop="name">
+			<el-form-item label="门店名称" prop="name">
 				<el-input v-model="dataForm.name" size="medium" clearable />
 			</el-form-item>
-			<el-form-item label="权限" prop="permissions">
-				<el-select
-					v-model="dataForm.permissions"
-					size="medium"
-					placeholder="选择权限"
-					style="width: 100%;"
-					multiple
-					clearable
-				>
-					<el-option
-						v-for="one in permissionList"
-						:key="one.id"
-						:label="one.moduleName+'/'+one.actionName"
-						:value="one.id"
-					></el-option>
-				</el-select>
-			</el-form-item>
-      <el-form-item label="描述" prop="desc">
-        <el-input v-model="dataForm.desc" size="medium" clearable />
+      <el-form-item label="负责人" prop="principalId">
+        <el-select
+            v-model="dataForm.principalId"
+            size="medium"
+            placeholder="查询负责人姓名"
+            style="width: 100%;"
+            filterable
+            remote
+            remote-show-suffix
+            :remote-method="remoteMethod"
+        >
+          <el-option
+              v-for="one in userList"
+              :key="one.id"
+              :label="one.userName"
+              :value="one.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="地址" prop="address">
+        <el-input v-model="dataForm.address" size="medium" clearable />
+      </el-form-item>
+      <el-form-item label="经度" prop="longitude">
+        <el-input v-model="dataForm.longitude" size="medium" clearable />
+      </el-form-item>
+      <el-form-item label="纬度" prop="latitude">
+        <el-input v-model="dataForm.latitude" size="medium" clearable />
       </el-form-item>
 		</el-form>
 		<template #footer>
@@ -49,19 +57,43 @@ export default {
 			dataForm: {
 				id: null,
 				name: null,
-        permissions:null,
-        desc:""
+        principalId:null,
+        longitude:null,
+        latitude:null,
 			},
       type:null,
-      permissionList:null,
+      userList:null,
       loading:false,
 			dataRule: {
+        address:[{required:true,message:'地址不能为空'}],
 				name: [{ required: true, message: '名称不能为空' }],
-        permissions: [{ required: true, message: '权限不能为空' }],
+        principalId: [{ required: true, message: '负责人不能为空' }],
+        longitude:[{required:true,pattern:'^[-+]?((1[0-7]\\d|[1-9]?\\d)(\\.\\d+)?|180(\\.0+)?)$',message:'经度格式错误'}],
+        latitude:[{required:true,pattern:'^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)$',message:'纬度格式错误'}]
 			}
 		};
 	},
 	methods: {
+    // 防抖函数
+    debounce(fn, delay) {
+      let timer = null;
+      return function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn.apply(this, args);
+        }, delay);
+      };
+    },
+    remoteMethod(value){
+      let that = this;
+      if(value)
+      that.$http('admin/user/search/'+value, 'GET', null, true, function(resp) {
+        that.userList=resp
+      });
+      else{
+        that.userList=null
+      }
+    },
 		init: function(id) {
 			let that = this;
       that.type = id?'update':'add';
@@ -69,22 +101,10 @@ export default {
 			that.visible = true;
 			that.$nextTick(() => {
 				that.$refs['dataForm'].resetFields();
-				that.$http('admin/permissions', 'GET', null, true, function(resp) {
-					that.permissionList = resp;
-
-				});
 				if (that.dataForm.id) {
 					that.$http('admin/role/'+id, 'GET', null, true, function(resp) {
 						that.dataForm.name = resp.name;
 						that.dataForm.permissions = resp.permissions.map(Number);
-            if(that.dataForm.permissions.includes(0)){
-              that.$message({
-                message: '无法修改超级管理员',
-                type: 'warning',
-                duration: 1200
-              });
-              that.visible=false
-            }
 						that.dataForm.desc = resp.desc;
 					});
 				}
@@ -96,7 +116,7 @@ export default {
 			that.$refs["dataForm"].validate(function(valid){
         if(valid){
           if(that.type==='add'){
-            that.addRole()
+            that.addStore()
           }
           else {
             that.updateRole()
@@ -105,14 +125,16 @@ export default {
 			})
       that.loading=false
 		},
-    addRole(){
+    addStore(){
       let that=this
       let data = {
         name: that.dataForm.name,
-        permissions: that.dataForm.permissions,
-        desc:that.dataForm.desc,
+        address:that.dataForm.address,
+        longitude: that.dataForm.longitude,
+        latitude:that.dataForm.latitude,
+        principalId:that.dataForm.principalId
       };
-      that.$http(`admin/role`,"POST",data,true,function(resp){
+      that.$http(`admin/store`,"POST",data,true,function(resp){
         that.$message({
           message: '操作成功',
           type: 'success',

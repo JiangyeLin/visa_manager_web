@@ -2,7 +2,7 @@
   <div>
     <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
       <el-form-item >
-        <el-input v-model="dataForm.userName" placeholder="角色名称" clearable></el-input>
+        <el-input v-model="dataForm.roleName" placeholder="角色名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
@@ -36,6 +36,13 @@
       <el-table-column prop="permissions" header-align="center" align="center" label='权限数量' min-width="170" />
       <el-table-column header-align="center" align="center" min-width="150" label="操作">
         <template #default="scope">
+          <el-button
+              type="text"
+              size="medium"
+              @click="addOrUpdate(scope.row.id)"
+          >
+            更新
+          </el-button>
           <el-button
               type="text"
               size="medium"
@@ -116,10 +123,10 @@ export default {
         }).catch(()=>{});
       }
     },
-    addOrUpdate(){
+    addOrUpdate(id){
       this.addOrUpdateVisible=true
       this.$nextTick(() => {
-        this.$refs.roleAddOrUpdate.init();
+        this.$refs.roleAddOrUpdate.init(id);
       });
     },
     loadDataList: function () {
@@ -131,7 +138,6 @@ export default {
         orderField: that.dataForm.orderField,
         order: that.dataForm.order,
         roleName:that.dataForm.roleName
-
       };
       that.$http('admin/role/page', 'POST', data, true, function (resp) {
         that.dataList=resp.records

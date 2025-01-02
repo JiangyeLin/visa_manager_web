@@ -47,8 +47,8 @@ app.config.globalProperties.$echarts = echarts //设置全局变量$echarts
 
 //后端项目的URL根路径
 // let baseUrl = "http://127.0.0.1:8383/"
-// let baseUrl = "http://192.168.1.30:8080/"
-let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
+let baseUrl = "http://192.168.1.25:8080/"
+// let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
 
 
 

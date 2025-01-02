@@ -9,6 +9,7 @@
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
+        <el-button size="medium" type="success" @click="addOrUpdate()">新增</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -25,15 +26,25 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="id" min-width="100"  />
-      <el-table-column prop="name" header-align="center" align="center" label="门店" min-width="170" />
+      <el-table-column prop="name" header-align="center" align="center" label="门店" min-width="130" />
       <el-table-column prop="address" header-align="center" align="center" label="地址"   min-width="220" />
-      <el-table-column prop="longitude" header-align="center" align="center" label="经度" min-width="120" />
-      <el-table-column prop="latitude" header-align="center" align="center" label="纬度" min-width="120" />
-      <el-table-column prop="principalName" header-align="center" align="center" label="负责人" min-width="120" />
-      <el-table-column prop="bindCode" header-align="center" align="center" label="绑定码" min-width="120" />
-      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="170" />
-      <el-table-column prop="updateTime" header-align="center" align="center" label="更新时间" min-width="170" />
+      <el-table-column prop="longitude" header-align="center" align="center" label="经度" min-width="100" />
+      <el-table-column prop="latitude" header-align="center" align="center" label="纬度" min-width="100" />
+      <el-table-column prop="principalName" header-align="center" align="center" label="负责人" min-width="100" />
+      <el-table-column prop="bindCode" header-align="center" align="center" label="绑定码" min-width="100" />
+<!--      <el-table-column header-align="center" align="center" min-width="150" label="操作">-->
+<!--        <template #default="scope">-->
+<!--          <el-button-->
+<!--              type="text"-->
+<!--              size="medium"-->
+<!--              @click="addOrUpdate(scope.row.id)"-->
+<!--          >-->
+<!--            更新-->
+<!--          </el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="170" />
+      <el-table-column prop="updateTime" header-align="center" align="center" label="更新时间" min-width="170" />-->
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -44,12 +55,17 @@
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
+    <store-add-or-update v-if="addOrUpdateVisible" ref="storeAddOrUpdate" @refreshDataList="loadDataList"></store-add-or-update>
   </div>
 </template>
 
 <script>
+import storeAddOrUpdate from "./store-add-or-update.vue";
 import {convertToChinaTime} from "../../utils";
 export default {
+  components:{
+    storeAddOrUpdate
+  },
   data: function() {
     return {
       dataForm: {
@@ -63,10 +79,17 @@ export default {
       pageSize: 10,
       totalCount: 0,
       dataListLoading: false,
-      dataRule: {}
+      dataRule: {},
+      addOrUpdateVisible:false,
     };
   },
   methods: {
+    addOrUpdate(id){
+      this.addOrUpdateVisible=true
+      this.$nextTick(() => {
+        this.$refs.storeAddOrUpdate.init(id);
+      });
+    },
     loadDataList: function () {
       let that = this;
       that.dataListLoading = true;
