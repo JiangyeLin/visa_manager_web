@@ -19,7 +19,7 @@
             filterable
             remote
             remote-show-suffix
-            :remote-method="remoteMethod"
+            :remote-method="debounceSearch"
         >
           <el-option
               v-for="one in userList"
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-
+import {debounce} from "../../utils";
 export default {
 	data: function() {
 		return {
@@ -70,26 +70,21 @@ export default {
         principalId: [{ required: true, message: '负责人不能为空' }],
         longitude:[{required:true,pattern:'^[-+]?((1[0-7]\\d|[1-9]?\\d)(\\.\\d+)?|180(\\.0+)?)$',message:'经度格式错误'}],
         latitude:[{required:true,pattern:'^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)$',message:'纬度格式错误'}]
-			}
+			},
+      debounceSearch:null
 		};
 	},
-	methods: {
-    // 防抖函数
-    debounce(fn, delay) {
-      let timer = null;
-      return function (...args) {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          fn.apply(this, args);
-        }, delay);
-      };
-    },
+  mounted() {
+    this.debounceSearch=debounce(this.remoteMethod,400)
+  },
+  methods: {
     remoteMethod(value){
       let that = this;
-      if(value)
-      that.$http('admin/user/search/'+value, 'GET', null, true, function(resp) {
-        that.userList=resp
-      });
+      if(value){
+        that.$http('admin/user/search/'+value, 'GET', null, true, function(resp) {
+          that.userList=resp
+        });
+      }
       else{
         that.userList=null
       }

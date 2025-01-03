@@ -25,3 +25,14 @@ export function convertToChinaTime(utcTimeString) {
     const formattedDate = formatter.format(utcDate);
     return formattedDate.replace(/\//g, "-").replace(", ", " ");
 }
+
+//防抖函数
+export function   debounce(fn, delay) {
+    let timer = null;
+    return function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            fn.apply(this, args);
+        }, delay);
+    };
+}
