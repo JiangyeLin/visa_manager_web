@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
-        <el-button size="medium" type="success" @click="addOrUpdate()">新增</el-button>
-        <el-button size="medium" type="danger" @click="deleteHandle()">删除</el-button>
+        <el-button size="medium" type="success" @click="addOrUpdate()" :disabled="!isAuth(['ROOT', 'ROLE:INSERT'])">新增</el-button>
+        <el-button size="medium" type="danger" @click="deleteHandle()" :disabled="!isAuth(['ROOT', 'ROLE:DELETE'])">删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -40,6 +40,7 @@
               type="text"
               size="medium"
               @click="addOrUpdate(scope.row.id)"
+              :disabled="!isAuth(['ROOT', 'ROLE:UPDATE'])"
           >
             更新
           </el-button>
@@ -47,6 +48,7 @@
               type="text"
               size="medium"
               @click="deleteHandle(scope.row.id)"
+              :disabled="!isAuth(['ROOT', 'ROLE:DELETE'])"
           >
             删除
           </el-button>

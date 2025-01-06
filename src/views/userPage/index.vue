@@ -19,8 +19,8 @@
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
-        <el-button size="medium" type="success" @click="addOrUpdate()">新增</el-button>
-        <el-button size="medium" type="danger" @click="deleteHandle()">批量删除</el-button>
+        <el-button size="medium" type="success" @click="addOrUpdate()" :disabled="!isAuth(['ROOT', 'USER:INSERT'])">新增</el-button>
+        <el-button size="medium" type="danger" @click="deleteHandle()" :disabled="!isAuth(['ROOT', 'USER:DELETE'])">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -60,6 +60,7 @@
               type="text"
               size="medium"
               @click="deleteHandle(scope.row.id)"
+              :disabled="!isAuth(['ROOT', 'USER:UPDATE'])"
           >
             删除
           </el-button>
@@ -67,6 +68,7 @@
               type="text"
               size="medium"
               @click="repass(scope.row.id)"
+              :disabled="!isAuth(['ROOT', 'USER:DELETE'])"
           >
             重置密码
           </el-button>

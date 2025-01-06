@@ -53,23 +53,23 @@
                         <SvgIcon name="home" class="icon-svg" />
                         <span slot="title">首页</span>
                     </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'orderPage' })">
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'orderPage' })"    v-if="isAuth(['ROOT', 'ORDER:SELECT'])">
                     <SvgIcon name="log" class="icon-svg" />
                     <span slot="title">订单管理</span>
                   </el-menu-item>
-                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })">
+                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
                         <SvgIcon name="admin" class="icon-svg" />
                         <span slot="title">会员管理</span>
                     </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })">
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })" v-if="isAuth(['ROOT', 'STORE:SELECT'])">
                     <SvgIcon name="company_fill" class="icon-svg" />
                     <span slot="title">门店管理</span>
                   </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'cardPage' })">
+                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'cardPage' })" v-if="isAuth(['ROOT', 'PREPAID_CARD:SELECT'])">
                     <SvgIcon name="card" class="icon-svg" />
                     <span slot="title">储值卡管理</span>
                   </el-menu-item>
-                  <el-submenu index="数据报表">
+                  <el-submenu index="数据报表" v-if="isAuth(['ROOT', 'REPORT:SELECT'])">
                     <template #title>
                       <SvgIcon name="tubiao"   class="icon-svg"/>
                       <span slot="title">数据报表</span>
@@ -88,11 +88,11 @@
                       <SvgIcon name="system"   class="icon-svg"/>
                       <span slot="title">系统配置</span>
                     </template>
-                    <el-menu-item index="角色管理" @click="$router.push({ name: 'rolePage' })">
+                    <el-menu-item index="角色管理" @click="$router.push({ name: 'rolePage' })" v-if="isAuth(['ROOT', 'ROLE:SELECT'])">
                       <SvgIcon name="tool_fill" class="icon-svg" />
                       <span slot="title">角色管理</span>
                     </el-menu-item>
-                    <el-menu-item index="用户管理" @click="$router.push({ name: 'userPage' })">
+                    <el-menu-item index="用户管理" @click="$router.push({ name: 'userPage' })" v-if="isAuth(['ROOT', 'USER:SELECT'])">
                       <SvgIcon name="users_fill" class="icon-svg" />
                       <span slot="title">用户管理</span>
                     </el-menu-item>

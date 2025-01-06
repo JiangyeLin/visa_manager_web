@@ -74,7 +74,6 @@ export default {
 				userName: [{ required: true, pattern: '^.{1,20}$', message: '用户名格式错误' }],
 				// phoneNumber: [{  pattern: '^1\\d{10}$', message: '电话格式错误' }],
         roleIds: [{ required: true, message: '角色不能为空' }],
-        storeId: [{ required: true, message: '门店不能为空' }],
 			}
 		};
 	},

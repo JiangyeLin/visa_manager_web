@@ -77,7 +77,6 @@ export default {
                 //发送登陆请求
                 that.$http('login', 'POST', data, true, function(resp) {
                     if (resp) {
-                      console.log( JSON.stringify(resp.pharmacies[0]))
                         //取出Token令牌，保存到storage中
                         let token = resp.token;
                         localStorage.setItem('token', token);

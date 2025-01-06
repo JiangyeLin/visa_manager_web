@@ -20,6 +20,7 @@
             remote
             remote-show-suffix
             :remote-method="debounceSearch"
+            clearable
         >
           <el-option
               v-for="one in userList"
@@ -75,7 +76,7 @@ export default {
 		};
 	},
   mounted() {
-    this.debounceSearch=debounce(this.remoteMethod,400)
+    this.debounceSearch=debounce(this.remoteMethod,300)
   },
   methods: {
     remoteMethod(value){

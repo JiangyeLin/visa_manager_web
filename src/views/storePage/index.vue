@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
-        <el-button size="medium" type="success" @click="addOrUpdate()">新增</el-button>
+        <el-button size="medium" type="success" @click="addOrUpdate()"   :disabled="!isAuth(['ROOT', 'STORE:INSERT'])">新增</el-button>
       </el-form-item>
     </el-form>
     <el-table

@@ -81,6 +81,7 @@
       </el-form-item>
       <el-form-item>
         <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
+        <el-button size="medium" type="warning" @click="clearQuery">清空条件</el-button>
         <el-button  size="medium" type="success" @click="exportAll">导出</el-button>
       </el-form-item>
     </el-form>
@@ -193,6 +194,18 @@ export default {
         that.totalCount = resp.total;
         that.dataListLoading = false;
       });
+    },
+    clearQuery(){
+      this.dataForm= {
+        order: null,
+        orderField: null,
+        cardNumber: null,
+        cardType: null,
+        memberPhoneNumber:null,
+        date:null,
+        startTime: null,
+        endTime: null,
+      }
     },
     searchHandle: function () {
       this.$refs['dataForm'].validate(valid => {
