@@ -26,6 +26,7 @@
 						:key="one.id"
 						:label="one.name"
 						:value="one.id"
+            :disabled="one.name==='admin'"
 					></el-option>
 				</el-select>
 			</el-form-item>
@@ -147,7 +148,7 @@ export default {
         storeId:that.dataForm.storeId,
         phoneNumber:that.dataForm.phoneNumber
       };
-      that.$http(`admin/user`,"PUT",data,true,function(resp){
+      that.$http(`admin/user/update`,"POST",data,true,function(resp){
         that.$message({
           message: '操作成功',
           type: 'success',

@@ -130,7 +130,7 @@ export default {
         permissions: that.dataForm.permissions,
         desc:that.dataForm.desc,
       };
-      that.$http(`admin/role`,"PUT",data,true,function(resp){
+      that.$http(`admin/role/update`,"POST",data,true,function(resp){
         that.$message({
           message: '操作成功',
           type: 'success',

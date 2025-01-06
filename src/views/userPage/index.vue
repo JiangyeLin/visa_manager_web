@@ -160,7 +160,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$http('admin/user', 'DELETE', { ids:ids }, true, function(resp) {
+          that.$http('admin/user/delete', 'POST', { ids:ids }, true, function(resp) {
             that.$message({
               message: '操作成功',
               type: 'success',
