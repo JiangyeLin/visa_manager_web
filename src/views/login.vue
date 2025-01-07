@@ -80,7 +80,7 @@ export default {
                         //取出Token令牌，保存到storage中
                         let token = resp.token;
                         localStorage.setItem('token', token);
-                        localStorage.setItem('permissions', JSON.stringify(resp.pharmacies[0]));
+                        localStorage.setItem('permissions', JSON.stringify(resp.pharmacies));
                         //让路由跳转页面，这里的Home是home.vue页面的名字
                         router.push({ name: 'Home' });
 
