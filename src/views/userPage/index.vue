@@ -220,8 +220,10 @@ export default {
   },
   mounted() {
     let that=this
-    this.$http('admin/store/idlist', 'GET', null, true, function (resp) {
-      that.storeOption=resp
+    this.$http('admin/store/list', 'GET', null, true, function (resp) {
+      that.storeOption=Object.entries(resp).map(([key, value]) => {
+        return { id: key, storeName: value };
+      });
     });
     this.loadDataList();
   }

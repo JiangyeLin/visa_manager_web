@@ -88,19 +88,21 @@ export default {
 				that.$refs['dataForm'].resetFields();
 				that.$http('admin/role/all', 'GET', null, true, function(resp) {
 					that.roleList = resp;
-				});
-        that.$http('admin/store/idlist', 'GET', null, true, function(resp) {
-          that.storeList = resp;
+          that.$http('admin/store/list', 'GET', null, true, function(resp) {
+            that.storeList = Object.entries(resp).map(([key, value]) => {
+              return { id: key, storeName: value };
+            });
+          if (that.dataForm.id) {
+            that.$http('admin/user/'+that.dataForm.id, 'GET', null, true, function(resp) {
+              that.dataForm.userName = resp.userName;
+              that.dataForm.phoneNumber = resp.phoneNumber;
+              let store=that.storeList.find(item => item.storeName === resp.storeName)
+              that.dataForm.storeId= store.id;
+              that.dataForm.roleIds=resp.roles.map(Number)
+            });
+          }
         });
-				if (that.dataForm.id) {
-          that.$http('admin/user/'+that.dataForm.id, 'GET', null, true, function(resp) {
-            that.dataForm.userName = resp.userName;
-            that.dataForm.phoneNumber = resp.phoneNumber;
-            let store=that.storeList.find(item => item.storeName === resp.storeName)
-            that.dataForm.storeId= store.id;
-            that.dataForm.roleIds=resp.roles.map(Number)
-          });
-				}
+				});
 			});
 		},
     resetFields: function() {

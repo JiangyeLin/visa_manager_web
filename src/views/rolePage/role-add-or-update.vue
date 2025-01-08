@@ -71,23 +71,22 @@ export default {
 				that.$refs['dataForm'].resetFields();
 				that.$http('admin/permissions', 'GET', null, true, function(resp) {
 					that.permissionList = resp;
-
+          if (that.dataForm.id) {
+            that.$http('admin/role/'+id, 'GET', null, true, function(resp) {
+              that.dataForm.name = resp.name;
+              that.dataForm.permissions = resp.permissions.map(String);
+              if(that.dataForm.permissions.includes('0')){
+                that.$message({
+                  message: '无法修改超级管理员',
+                  type: 'warning',
+                  duration: 1200
+                });
+                that.visible=false
+              }
+              that.dataForm.desc = resp.desc;
+            });
+          }
 				});
-				if (that.dataForm.id) {
-					that.$http('admin/role/'+id, 'GET', null, true, function(resp) {
-						that.dataForm.name = resp.name;
-						that.dataForm.permissions = resp.permissions.map(Number);
-            if(that.dataForm.permissions.includes(0)){
-              that.$message({
-                message: '无法修改超级管理员',
-                type: 'warning',
-                duration: 1200
-              });
-              that.visible=false
-            }
-						that.dataForm.desc = resp.desc;
-					});
-				}
 			});
 		},
 		dataFormSubmit:function(){

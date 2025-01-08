@@ -63,7 +63,7 @@ export default {
             oldPassword:that.dataForm.password,
             newPassword:that.dataForm.confirmPassword,
           }
-					that.$http("admin/user","PUT",data,true,function(resp){
+					that.$http("admin/user/uppass","POST",data,true,function(resp){
 
 							that.$message({
 								message: '密码修改成功',
