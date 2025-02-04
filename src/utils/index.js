@@ -26,6 +26,14 @@ export function convertToChinaTime(utcTimeString) {
     return formattedDate.replace(/\//g, "-").replace(", ", " ");
 }
 
+export const formatDateTime = (utcTimeString) => {
+    let date = new Date(utcTimeString);
+    let timeStr = date.getFullYear() + '-';
+    timeStr += (date.getMonth() + 1).toString().padStart(2,'0') + '-';
+    timeStr += date.getDate().toString().padStart(2,'0');
+    return timeStr;
+}
+
 //防抖函数
 export function   debounce(fn, delay) {
     let timer = null;

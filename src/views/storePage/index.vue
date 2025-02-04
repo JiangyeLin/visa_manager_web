@@ -32,19 +32,6 @@
       <el-table-column prop="latitude" header-align="center" align="center" label="纬度" min-width="100" />
       <el-table-column prop="principalName" header-align="center" align="center" label="负责人" min-width="100" />
       <el-table-column prop="bindCode" header-align="center" align="center" label="绑定码" min-width="100" />
-<!--      <el-table-column header-align="center" align="center" min-width="150" label="操作">-->
-<!--        <template #default="scope">-->
-<!--          <el-button-->
-<!--              type="text"-->
-<!--              size="medium"-->
-<!--              @click="addOrUpdate(scope.row.id)"-->
-<!--          >-->
-<!--            更新-->
-<!--          </el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="170" />
-      <el-table-column prop="updateTime" header-align="center" align="center" label="更新时间" min-width="170" />-->
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"

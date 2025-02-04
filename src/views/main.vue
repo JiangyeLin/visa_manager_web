@@ -7,7 +7,7 @@
         <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
             <div class="site-navbar__header">
                 <h1 class="site-navbar__brand">
-                    <a class="site-navbar__brand-lg">医药会员卡管理系统</a>
+                    <a class="site-navbar__brand-lg">签证管理系统</a>
                     <a class="site-navbar__brand-mini">OA</a>
                 </h1>
             </div>
@@ -53,23 +53,23 @@
                         <SvgIcon name="home" class="icon-svg" />
                         <span slot="title">首页</span>
                     </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'orderPage' })"    v-if="isAuth(['ROOT', 'ORDER:SELECT'])">
+                 <!--  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'orderPage' })"    v-if="isAuth(['ROOT', 'ORDER:SELECT'])">
                     <SvgIcon name="log" class="icon-svg" />
                     <span slot="title">订单管理</span>
-                  </el-menu-item>
+                  </el-menu-item> -->
                     <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
                         <SvgIcon name="admin" class="icon-svg" />
                         <span slot="title">会员管理</span>
                     </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })" v-if="isAuth(['ROOT', 'STORE:SELECT'])">
+                 <!--  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })" v-if="isAuth(['ROOT', 'STORE:SELECT'])">
                     <SvgIcon name="company_fill" class="icon-svg" />
                     <span slot="title">门店管理</span>
-                  </el-menu-item>
-                  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'cardPage' })" v-if="isAuth(['ROOT', 'PREPAID_CARD:SELECT'])">
+                  </el-menu-item> -->
+                 <!--  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'cardPage' })" v-if="isAuth(['ROOT', 'PREPAID_CARD:SELECT'])">
                     <SvgIcon name="card" class="icon-svg" />
                     <span slot="title">储值卡管理</span>
-                  </el-menu-item>
-                  <el-submenu index="数据报表" v-if="isAuth(['ROOT', 'REPORT:SELECT'])">
+                  </el-menu-item> -->
+                 <!--  <el-submenu index="数据报表" v-if="isAuth(['ROOT', 'REPORT:SELECT'])">
                     <template #title>
                       <SvgIcon name="tubiao"   class="icon-svg"/>
                       <span slot="title">数据报表</span>
@@ -82,7 +82,7 @@
                       <SvgIcon name="tubiao" class="icon-svg" />
                       <span slot="title">会员卡信息中心</span>
                     </el-menu-item>
-                  </el-submenu>
+                  </el-submenu> -->
                   <el-submenu index="系统配置">
                     <template #title>
                       <SvgIcon name="system"   class="icon-svg"/>

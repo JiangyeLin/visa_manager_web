@@ -6,7 +6,7 @@
                     <el-col :span="22">
                         <div class="right">
                             <div class="title-container">
-                                <h2>医药后台管理系统</h2>
+                                <h2>签证管理系统</h2>
                                 <span>( Ver 1.0 )</span>
                             </div>
                             <div v-if="!qrCodeVisible">
@@ -28,7 +28,7 @@
                                     ></el-input>
                                 </div>
                                 <div class="row">
-                                    <el-button type="primary" class="btn" @click="login">登陆系统</el-button>
+                                    <el-button type="primary" class="btn" @click="login">登录</el-button>
                                 </div>
                             </div>
 
@@ -86,7 +86,7 @@ export default {
 
                     } else {
                         that.$message({
-                            message: '登陆失败',
+                            message: '登录失败',
                             type: 'error',
                             duration: 1200
                         });

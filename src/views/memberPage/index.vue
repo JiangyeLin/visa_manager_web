@@ -25,18 +25,15 @@
           align="center"
           width="50"
       />
-      <el-table-column prop="id" header-align="center" align="center" label="会员ID" min-width="200" fixed />
-      <el-table-column prop="nickName" header-align="center" align="center" label="用户昵称" min-width="170" fixed/>
+      <!-- <el-table-column prop="id" header-align="center" align="center" label="用户ID" min-width="200" fixed /> -->
+      <el-table-column prop="name" header-align="center" align="center" label="姓名" min-width="170" fixed/>
       <el-table-column prop="phoneNumber" header-align="center" align="center" label="手机号" min-width="170" fixed/>
-      <el-table-column prop="balance" header-align="center" align="center" label="余额" min-width="120" >
-        <template #default="scope" >
-          <span style="text-align: center"> {{(+scope.row.balance).toFixed(2)}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="points" header-align="center" align="center" label="积分" min-width="100" />
-      <el-table-column prop="level" header-align="center" align="center" label="等级" min-width="100" />
-      <el-table-column prop="status" header-align="center" align="center" label="状态" min-width="100" />
-      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间" min-width="270" />
+      <el-table-column prop="passportNumber" header-align="center" align="center" label="护照编号" min-width="100" />
+      <el-table-column prop="gender" header-align="center" align="center" label="性别" min-width="50" />
+      <el-table-column prop="familyName" header-align="center" align="center" label="姓" min-width="100" />
+      <el-table-column prop="givenName"  header-align="center" align="center" label="名" min-width="100" />
+      <el-table-column prop="passportValidity" header-align="center" align="center" label="护照有效期" min-width="100" />
+      <el-table-column prop="birthDate" header-align="center" align="center" label="生日" min-width="100" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -51,6 +48,10 @@
 </template>
 
 <script>
+import { convertToChinaTime } from '../../utils';
+import { formatDateTime } from '../../utils';
+
+
 export default {
   data: function() {
     return {
@@ -80,8 +81,16 @@ export default {
         orderField: that.dataForm.orderField,
         order: that.dataForm.order
       };
-      that.$http('admin/member/page', 'POST', data, true, function (resp) {
-        that.dataList = resp.records;
+      that.$http('customer/list', 'POST', data, true, function (resp) {
+        that.dataList=resp.map(item=>{
+          //console.log(parseTime(item.birthDate,"{y}-{m}-{d}"))
+            return {
+              ...item, //保留其他属性
+              birthDate:formatDateTime(item.birthDate),
+              passportValidity:formatDateTime(item.passportValidity),
+            }
+        })
+        
         that.totalCount = resp.total;
         that.dataListLoading = false;
       });

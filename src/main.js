@@ -46,9 +46,9 @@ app.config.globalProperties.$echarts = echarts //设置全局变量$echarts
 
 
 //后端项目的URL根路径
-// let baseUrl = "http://127.0.0.1:8383/"
+let baseUrl = "http://localhost:8383/"
 // let baseUrl = "http://192.168.1.21:8080/"
-let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
+//let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
 
 
 
@@ -57,7 +57,6 @@ app.config.globalProperties.$baseUrl = baseUrl //设置全局变量$baseUrl
 
 //封装全局Ajax公共函数
 app.config.globalProperties.$http = function(url, method, data, async, fun) {
-
     $.ajax({
         url: baseUrl + url,
         type: method,
