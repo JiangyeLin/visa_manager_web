@@ -5,7 +5,7 @@
         <el-input v-model="dataForm.keyword" placeholder="请输入要查询的关键字" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
+        <el-button size="medium" type="primary" @click="searchHandle()">查询公司</el-button>
         <el-button size="medium" type="success" @click="addOrUpdate()"   :disabled="!isAuth(['ROOT', 'STORE:INSERT'])">新增</el-button>
       </el-form-item>
     </el-form>
@@ -25,19 +25,15 @@
           width="50"
       />
       <!-- <el-table-column prop="id" header-align="center" align="center" label="用户ID" min-width="200" fixed /> -->
-      <el-table-column prop="familyName,givenName" header-align="center" align="center" label="中文名" min-width="170" fixed>
-        <template v-slot="scope">
-	          {{scope.row.familyName}} {{scope.row.givenName}}
-	      </template>
+      <el-table-column prop="companyNameCn" header-align="center" align="center" label="公司名称" min-width="170">
       </el-table-column>
-      
-      <el-table-column prop="familyName" header-align="center" align="center" label="姓" min-width="100" />
-      <el-table-column prop="givenName"  header-align="center" align="center" label="名" min-width="100" />
-      <el-table-column prop="gender" header-align="center" align="center" label="性别" min-width="50" />
-      <el-table-column prop="phoneNumber" header-align="center" align="center" label="手机号" min-width="170"/>
-      <el-table-column prop="passportNumber" header-align="center" align="center" label="护照编号" min-width="100" />
-      <el-table-column prop="passportValidity" header-align="center" align="center" label="护照有效期至" min-width="100" />
-      <el-table-column prop="birthDate" header-align="center" align="center" label="出生日期" min-width="100" />
+      <el-table-column prop="companyNameEn" header-align="center" align="center" label="英文名" min-width="50" />
+      <el-table-column prop="address" header-align="center" align="center" label="地址" min-width="170"/>
+      <el-table-column prop="unifiedSocialCreditCode" header-align="center" align="center" label="统一社会信用代码" min-width="100" />
+<!--       <el-table-column prop="familyName" header-align="center" align="center" label="姓" min-width="100" />
+      <el-table-column prop="givenName"  header-align="center" align="center" label="名" min-width="100" /> -->
+      <el-table-column prop="legalRepresentative" header-align="center" align="center" label="法定代表人" min-width="100" />
+      <el-table-column prop="registrationDate" header-align="center" align="center" label="注册日期" min-width="100" />
     </el-table>
     <el-pagination
         @size-change="sizeChangeHandle"
@@ -94,13 +90,11 @@ export default {
         orderField: that.dataForm.orderField,
         order: that.dataForm.order
       };
-      that.$http('customer/list', 'POST', data, true, function (resp) {
+      that.$http('company/list', 'POST', data, true, function (resp) {
         that.dataList=resp.records.map(item=>{
-          //console.log(parseTime(item.birthDate,"{y}-{m}-{d}"))
             return {
               ...item, //保留其他属性
-              birthDate:formatDateTime(item.birthDate),
-              passportValidity:formatDateTime(item.passportValidity),
+              registrationDate:formatDateTime(item.registrationDate)
             }
         })
         

@@ -59,7 +59,15 @@
                   </el-menu-item> -->
                     <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
                         <SvgIcon name="admin" class="icon-svg" />
-                        <span slot="title">会员管理</span>
+                        <span slot="title">客户管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'companyPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
+                        <SvgIcon name="admin" class="icon-svg" />
+                        <span slot="title">公司管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
+                        <SvgIcon name="admin" class="icon-svg" />
+                        <span slot="title">展会管理</span>
                     </el-menu-item>
                  <!--  <el-menu-item index="teamAppointment" @click="$router.push({ name: 'storePage' })" v-if="isAuth(['ROOT', 'STORE:SELECT'])">
                     <SvgIcon name="company_fill" class="icon-svg" />

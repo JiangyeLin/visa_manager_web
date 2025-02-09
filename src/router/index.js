@@ -7,6 +7,7 @@ import Login from '../views/login.vue'
 import Main from "../views/main.vue"
 import Home from "../views/home.vue"
 import memberPage from "../views/memberPage/index.vue"
+import companyPage from "../views/companyPage/index.vue"
 import orderPage from "../views/orderPage/index.vue";
 import storePage from "../views/storePage/index.vue";
 import cardPage from "../views/cardPage/index.vue";
@@ -39,16 +40,16 @@ const routes = [{
 				name: 'memberPage',
 				component: memberPage,
 				meta: {
-					title: '会员管理',
+					title: '客户管理',
 					isTab: true
 				}
 			},
 			{
-				path: '/orderPage',
-				name: 'orderPage',
-				component: orderPage,
+				path: '/companyPage',
+				name: 'companyPage',
+				component: companyPage,
 				meta: {
-					title: '订单管理',
+					title: '公司管理',
 					isTab: true
 				}
 			},

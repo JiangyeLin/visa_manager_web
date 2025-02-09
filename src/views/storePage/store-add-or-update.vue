@@ -91,6 +91,7 @@ export default {
       }
     },
 		init: function(id) {
+      console.log("init")
 			let that = this;
       that.type = id?'update':'add';
 			that.dataForm.id = id || null;
