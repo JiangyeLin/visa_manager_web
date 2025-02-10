@@ -96,7 +96,6 @@ export default {
       };
       that.$http('customer/list', 'POST', data, true, function (resp) {
         that.dataList=resp.records.map(item=>{
-          //console.log(parseTime(item.birthDate,"{y}-{m}-{d}"))
             return {
               ...item, //保留其他属性
               birthDate:formatDateTime(item.birthDate),

@@ -57,7 +57,7 @@
                     <SvgIcon name="log" class="icon-svg" />
                     <span slot="title">订单管理</span>
                   </el-menu-item> -->
-                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'memberPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
+                    <el-menu-item index="teamAppointment" @click="$router.push({ name: 'customerPage' })"  v-if="isAuth(['ROOT', 'MEMBER:SELECT'])">
                         <SvgIcon name="admin" class="icon-svg" />
                         <span slot="title">客户管理</span>
                     </el-menu-item>

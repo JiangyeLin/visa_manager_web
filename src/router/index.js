@@ -6,7 +6,7 @@ from 'vue-router'
 import Login from '../views/login.vue'
 import Main from "../views/main.vue"
 import Home from "../views/home.vue"
-import memberPage from "../views/memberPage/index.vue"
+import customerPage from "../views/customerPage/index.vue"
 import companyPage from "../views/companyPage/index.vue"
 import orderPage from "../views/orderPage/index.vue";
 import storePage from "../views/storePage/index.vue";
@@ -36,9 +36,9 @@ const routes = [{
 				}
 			},
 			{
-				path: '/memberPage',
-				name: 'memberPage',
-				component: memberPage,
+				path: '/customerPage',
+				name: 'customerPage',
+				component: customerPage,
 				meta: {
 					title: '客户管理',
 					isTab: true
