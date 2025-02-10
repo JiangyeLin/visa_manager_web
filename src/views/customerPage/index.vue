@@ -1,45 +1,130 @@
 <template>
-  <div>
-    <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" >
-      <el-form-item >
-        <el-input v-model="dataForm.keyword" placeholder="请输入要查询的关键字" clearable></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button size="medium" type="primary" @click="searchHandle()">查询</el-button>
-        <el-button size="medium" type="success" @click="addOrUpdate()"   :disabled="!isAuth(['ROOT', 'STORE:INSERT'])">新增</el-button>
-      </el-form-item>
-    </el-form>
-    <el-table
+  <el-row>
+    <!-- 左侧树形组件（公司信息） -->
+    <el-col :span="6" style="height: 100vh; overflow-y: auto; padding: 10px">
+      <el-tree
+        :data="companyTreeData"
+        :props="treeProps"
+        @node-click="onNodeClick"
+        accordion
+        highlight-current
+        node-key="id"
+        ref="tree"
+        :expand-on-click-node="false"
+        style="max-height: 100%; overflow-y: auto"
+      >
+      </el-tree>
+    </el-col>
+
+    <!-- 右侧表格组件（客户数据） -->
+    <el-col :span="18" style="height: 100vh; overflow-y: auto; padding: 10px">
+      <el-form
+        :inline="true"
+        :model="dataForm"
+        :rules="dataRule"
+        ref="dataForm"
+      >
+        <el-form-item>
+          <el-input
+            v-model="dataForm.keyword"
+            placeholder="请输入要查询的关键字"
+            clearable
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="medium" type="primary" @click="searchHandle()"
+            >查询</el-button
+          >
+          <el-button
+            size="medium"
+            type="success"
+            @click="addOrUpdate()"
+            :disabled="!isAuth(['ROOT', 'STORE:INSERT'])"
+            >新增</el-button
+          >
+        </el-form-item>
+      </el-form>
+
+      <!-- 客户数据表格 -->
+      <el-table
         :data="dataList"
         border
-        stripe 
+        stripe
         v-loading="dataListLoading"
-        :cell-style="{ padding: '4px 0'  }"
+        :cell-style="{ padding: '4px 0' }"
         size="medium"
-        style="width: 100%;"
-    >
-      <el-table-column
+        style="width: 100%"
+      >
+        <el-table-column
           type="selection"
           header-align="center"
           align="center"
           width="50"
-      />
-      <!-- <el-table-column prop="id" header-align="center" align="center" label="用户ID" min-width="200" fixed /> -->
-      <el-table-column prop="familyName,givenName" header-align="center" align="center" label="中文名" min-width="170" fixed>
-        <template v-slot="scope">
-	          {{scope.row.familyName}} {{scope.row.givenName}}
-	      </template>
-      </el-table-column>
-      
-      <el-table-column prop="familyName" header-align="center" align="center" label="姓" min-width="100" />
-      <el-table-column prop="givenName"  header-align="center" align="center" label="名" min-width="100" />
-      <el-table-column prop="gender" header-align="center" align="center" label="性别" min-width="50" />
-      <el-table-column prop="phoneNumber" header-align="center" align="center" label="手机号" min-width="170"/>
-      <el-table-column prop="passportNumber" header-align="center" align="center" label="护照编号" min-width="100" />
-      <el-table-column prop="passportValidity" header-align="center" align="center" label="护照有效期至" min-width="100" />
-      <el-table-column prop="birthDate" header-align="center" align="center" label="出生日期" min-width="100" />
-    </el-table>
-    <el-pagination
+        />
+        <el-table-column
+          prop="familyName,givenName"
+          header-align="center"
+          align="center"
+          label="中文名"
+          min-width="170"
+        >
+          <template v-slot="scope">
+            {{ scope.row.familyName }} {{ scope.row.givenName }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="familyName"
+          header-align="center"
+          align="center"
+          label="姓"
+          min-width="100"
+        />
+        <el-table-column
+          prop="givenName"
+          header-align="center"
+          align="center"
+          label="名"
+          min-width="100"
+        />
+        <el-table-column
+          prop="gender"
+          header-align="center"
+          align="center"
+          label="性别"
+          min-width="50"
+        />
+        <el-table-column
+          prop="phoneNumber"
+          header-align="center"
+          align="center"
+          label="手机号"
+          min-width="170"
+        />
+        <el-table-column
+          prop="passportNumber"
+          header-align="center"
+          align="center"
+          label="护照编号"
+          min-width="100"
+        />
+        <el-table-column
+          prop="passportValidity"
+          header-align="center"
+          align="center"
+          label="护照有效期至"
+          min-width="100"
+        />
+        <el-table-column
+          prop="birthDate"
+          header-align="center"
+          align="center"
+          label="出生日期"
+          min-width="100"
+        />
+      </el-table>
+
+      <!-- 分页 -->
+      <el-pagination
         @size-change="sizeChangeHandle"
         @current-change="currentChangeHandle"
         :current-page="pageIndex"
@@ -47,70 +132,111 @@
         :page-size="pageSize"
         :total="totalCount"
         layout="total, sizes, prev, pager, next, jumper"
-    ></el-pagination>
+      ></el-pagination>
+    </el-col>
+  </el-row>
 
-    <store-add-or-update v-if="addOrUpdateVisible" ref="storeAddOrUpdate" @refreshDataList="loadDataList"></store-add-or-update>
-  </div>
+  <!-- 新增或修改公司信息弹窗 -->
+  <store-add-or-update
+    v-if="addOrUpdateVisible"
+    ref="storeAddOrUpdate"
+    @refreshDataList="loadDataList"
+  ></store-add-or-update>
 </template>
 
 <script>
-import { formatDateTime } from '../../utils';
+import { formatDateTime } from "../../utils";
 import storeAddOrUpdate from "../storePage/store-add-or-update.vue";
+
 export default {
-  components:{
-    storeAddOrUpdate
+  components: {
+    storeAddOrUpdate,
   },
-  data: function() {
+  data: function () {
     return {
-      dataForm: {
-        order:null,
-        orderField:null,
-        keyword:null
+      // 左侧公司树的数据
+      companyTreeData: [], // 存储公司数据
+      treeProps: {
+        label: "companyNameCn", // 树节点的标签（公司名称）
+        children: "children", // 树的子节点字段
       },
-      dataList: [],
-      pageIndex: 1,
-      pageSize: 20,
-      totalCount: 0,
-      dataListLoading: false,
+      dataForm: {
+        order: null,
+        orderField: null,
+        keyword: null,
+      },
+      dataList: [], // 存储客户列表数据
+      pageIndex: 1, // 当前页码
+      pageSize: 20, // 每页数据条数
+      totalCount: 0, // 总数据量
+      dataListLoading: false, // 表格加载状态
       dataRule: {},
-      addOrUpdateVisible:false
+      addOrUpdateVisible: false,
+      selectedCompanyId: null, // 当前选中的公司ID
     };
   },
   methods: {
-    addOrUpdate(id){
-      this.addOrUpdateVisible=true
+    // 加载公司树
+    loadCompanyTree() {
+      this.$http("company/list", "POST", null, true, (resp) => {
+        this.companyTreeData = resp.records;
+      });
+    },
+
+    // 左侧树节点点击事件，加载该公司下的客户列表
+    onNodeClick(nodeData, node, component) {
+      if (this.selectedCompanyId == nodeData.id) {
+        //取消选中
+        this.selectedCompanyId = null;
+        //this.$refs.tree.setCheckedKeys([])
+        this.$refs.tree.setCurrentKey(null)
+      } else {
+        this.selectedCompanyId = nodeData.id;
+      }
+
+      this.pageIndex = 1; // 重置分页到第一页
+      this.loadDataList(); // 加载选中公司下的客户数据
+    },
+
+    addOrUpdate(id) {
+      this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         this.$refs.storeAddOrUpdate.init(id);
       });
     },
-    loadDataList: function () {
-      let that = this;
-      that.dataListLoading = true;
+
+    // 加载客户列表数据
+    loadDataList() {
+      //if (!this.selectedCompanyId) return;  // 如果没有选中公司，跳出
+
+      this.dataListLoading = true;
       let data = {
-        keyword: that.dataForm.keyword,
-        phoneNumber: that.dataForm.phoneNumber,
-        page: that.pageIndex,
-        size: that.pageSize,
-        orderField: that.dataForm.orderField,
-        order: that.dataForm.order
+        companyId: this.selectedCompanyId, // 传递公司ID
+        keyword: this.dataForm.keyword,
+        page: this.pageIndex,
+        size: this.pageSize,
+        orderField: this.dataForm.orderField,
+        order: this.dataForm.order,
       };
-      that.$http('customer/list', 'POST', data, true, function (resp) {
-        that.dataList=resp.records.map(item=>{
-            return {
-              ...item, //保留其他属性
-              birthDate:formatDateTime(item.birthDate),
-              passportValidity:formatDateTime(item.passportValidity),
-            }
-        })
-        
-        that.totalCount = resp.total;
-        that.dataListLoading = false;
+
+      this.$http("customer/list", "POST", data, true, (resp) => {
+        this.dataList = resp.records.map((item) => {
+          return {
+            ...item,
+            birthDate: formatDateTime(item.birthDate),
+            passportValidity: formatDateTime(item.passportValidity),
+          };
+        });
+
+        this.totalCount = resp.total;
+        this.dataListLoading = false;
       });
     },
-    searchHandle: function () {
-      this.$refs['dataForm'].validate(valid => {
+
+    searchHandle() {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          this.$refs['dataForm'].clearValidate();
+          this.$refs["dataForm"].clearValidate();
           if (this.pageIndex !== 1) {
             this.pageIndex = 1;
           }
@@ -120,21 +246,80 @@ export default {
         }
       });
     },
-    sizeChangeHandle: function (val) {
+
+    sizeChangeHandle(val) {
       this.pageSize = val;
       this.pageIndex = 1;
       this.loadDataList();
     },
-    currentChangeHandle: function (val) {
+
+    currentChangeHandle(val) {
       this.pageIndex = val;
       this.loadDataList();
     },
   },
-  mounted() {
-    this.loadDataList();
-  }
 
+  mounted() {
+    this.loadCompanyTree(); // 初始化加载公司树
+    this.loadDataList(); // 加载数据（可选，具体看是否需要在初始化时加载）
+  },
 };
 </script>
 
-<style></style>
+<style scoped>
+/* 左侧树形组件优化样式 */
+.el-col {
+  padding: 20px;
+}
+
+.el-tree {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.el-tree .el-tree-node__content {
+  padding: 12px 16px; /* 增加内边距 */
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  line-height: 36px; /* 增加行高 */
+  font-size: 14px; /* 可选：根据需要调整字体大小 */
+}
+
+.el-tree .el-tree-node__content:hover {
+  background-color: #e6f7ff;
+}
+
+.el-tree .el-tree-node__content.is-current {
+  background-color: #1890ff;
+  color: white;
+}
+
+/* 优化左侧树的高亮和选中效果 */
+.el-tree .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #1890ff;
+  color: white;
+}
+
+/* 右侧表格区域优化 */
+.el-col {
+  padding: 10px;
+  overflow: auto;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+/* 树形和表格之间的间距 */
+.el-row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* 自定义表格的样式 */
+.el-table {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+</style>
