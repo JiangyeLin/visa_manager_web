@@ -56,7 +56,7 @@
         prop="address"
         header-align="center"
         align="center"
-        label="地址"
+        label="注册地址"
         min-width="170"
       />
       <el-table-column
@@ -82,6 +82,18 @@
         label="注册日期"
         min-width="100"
       />
+      <el-table-column fixed="right" label="操作" align="center">
+        <template #default="scope">
+          <el-popconfirm
+            title="确认删除此公司?"
+            @confirm="deleteCompany(scope.row.id)"
+          >
+            <template #reference>
+              <el-button link type="primary" size="small">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -131,6 +143,24 @@ export default {
         if (this.$refs.companySave) {
           this.$refs.companySave.init();
         }
+      });
+    },
+    deleteCompany(id) {
+      let that = this;
+      that.dataListLoading = true;
+      let data = {
+        id: id,
+      };
+
+      that.$http("company/delete", "DELETE", data, true, function (resp) {
+        that.$message({
+          message: "操作成功",
+          type: "success",
+          duration: 1200,
+        });
+        that.dataListLoading = false;
+
+        that.loadDataList(); // 刷新表格数据
       });
     },
     loadDataList: function () {

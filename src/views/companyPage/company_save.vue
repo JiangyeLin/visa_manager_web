@@ -18,6 +18,9 @@
       <el-form-item label="英文名" prop="companyNameEn">
         <el-input v-model="dataForm.companyNameEn" size="medium" clearable />
       </el-form-item>
+      <el-form-item label="法定代表人" prop="legalRepresentative">
+        <el-input v-model="dataForm.legalRepresentative" size="medium" clearable />
+      </el-form-item>
       <el-form-item label="地址" prop="address">
         <el-input v-model="dataForm.address" size="medium" clearable />
       </el-form-item>
@@ -26,6 +29,14 @@
           v-model="dataForm.unifiedSocialCreditCode"
           size="medium"
           clearable
+        />
+      </el-form-item>
+      <el-form-item label="注册日期" prop="registrationDate">
+        <el-date-picker
+          v-model="dataForm.registrationDate"
+          type="date"
+          default-value="2020-01-01"
+          placeholder="请选择注册日期"
         />
       </el-form-item>
     </el-form>
@@ -51,6 +62,8 @@ export default {
         companyNameEn: null,
         address: null,
         unifiedSocialCreditCode: null,
+        registrationDate: null,
+        legalRepresentative: null,
       },
       type: null,
       userList: null,
@@ -100,6 +113,8 @@ export default {
         companyNameEn: that.dataForm.companyNameEn,
         address: that.dataForm.address,
         unifiedSocialCreditCode: that.dataForm.unifiedSocialCreditCode,
+        registrationDate: that.dataForm.registrationDate,
+        legalRepresentative: that.dataForm.legalRepresentative,
       };
       that.$http(`company/update`, "POST", data, true, function (resp) {
         that.$message({

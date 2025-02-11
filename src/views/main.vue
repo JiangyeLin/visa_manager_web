@@ -7,6 +7,7 @@
         <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
             <div class="site-navbar__header">
                 <h1 class="site-navbar__brand">
+                    <img src="../assets/dami.JPG" width="36px"/>
                     <a class="site-navbar__brand-lg">签证管理系统</a>
                     <a class="site-navbar__brand-mini">OA</a>
                 </h1>
