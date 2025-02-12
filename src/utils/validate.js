@@ -35,7 +35,11 @@ export function isURL(s) {
  * @param {Object} s
  */
 export function isUsername(s) {
+<<<<<<< HEAD
+	return /^.{1,50}$/.test(s)
+=======
 	return /^[a-zA-Z0-9]{5,50}$/.test(s)
+>>>>>>> 9ce7889 (init commit)
 }
 
 

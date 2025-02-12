@@ -5,7 +5,11 @@ import viteSvgIcons from 'vite-plugin-svg-icons';
 
 
 module.exports = {
+<<<<<<< HEAD
+	base: './',
+=======
 	base: '/',
+>>>>>>> 9ce7889 (init commit)
 	server: {
 		port: 3000,
 		//是否弹出浏览器

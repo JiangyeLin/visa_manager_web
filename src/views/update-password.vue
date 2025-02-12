@@ -49,7 +49,39 @@ export default {
 		};
 	},
 	methods: {
+<<<<<<< HEAD
+		init:function(){
+			this.visible=true
+			this.$nextTick(() => {
+				this.$refs['dataForm'].resetFields();
+			});
+		},
+		dataFormSubmit:function(){
+			let that=this
+			that.$refs["dataForm"].validate(function(valid){
+				if(valid){
+					let data={
+            oldPassword:that.dataForm.password,
+            newPassword:that.dataForm.confirmPassword,
+          }
+					that.$http("admin/user/uppass","POST",data,true,function(resp){
+
+							that.$message({
+								message: '密码修改成功',
+								type: 'success',
+								duration: 1200,
+							});
+							that.visible = false;
+              that.$router.push('/login');
+
+
+					})
+				}
+			})
+		}
+=======
 		
+>>>>>>> 9ce7889 (init commit)
 	}
 };
 </script>

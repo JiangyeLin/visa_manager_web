@@ -2,4 +2,9 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+<<<<<<< HEAD
 *.local
+/.idea
+=======
+*.local
+>>>>>>> 9ce7889 (init commit)

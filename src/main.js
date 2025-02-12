@@ -1,5 +1,9 @@
 import {
+<<<<<<< HEAD
+    createApp
+=======
 	createApp
+>>>>>>> 9ce7889 (init commit)
 } from 'vue'
 
 import App from './App.vue'
@@ -17,6 +21,10 @@ const app = createApp(App) //创建VUE对象
 import router from './router'
 app.use(router) //挂载路由插件
 
+<<<<<<< HEAD
+
+
+=======
 //使用WebSocket，后端项目给前端页面推送通知更
 // import VueNativeSock from "vue-native-websocket-vue3";
 // app.use(VueNativeSock,"ws://localhost:8090/emos-api/socket",{ 
@@ -26,6 +34,7 @@ app.use(router) //挂载路由插件
 //导入Cookie库，可以读写Cookie数据
 import VueCookies from 'vue3-cookies'
 app.use(VueCookies); //挂载Cookie插件
+>>>>>>> 9ce7889 (init commit)
 
 //导入ElementUI
 import ElementPlus from 'element-plus';
@@ -34,6 +43,33 @@ import locale from 'element-plus/lib/locale/lang/zh-CN'
 
 //导入ElementUI的消息通知组件，下面封装全局Ajax的时候处理异常的时候需要弹出通知
 import {
+<<<<<<< HEAD
+    ElMessage
+} from 'element-plus'
+
+
+
+
+//挂载ElementUl-Plus插件
+app.use(ElementPlus, {
+    locale
+})
+
+
+
+//导入echarts库
+import * as echarts from 'echarts'
+app.config.globalProperties.$echarts = echarts //设置全局变量$echarts
+
+
+//后端项目的URL根路径
+let baseUrl = "http://localhost:8383/"
+// let baseUrl = "http://192.168.1.21:8080/"
+//let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
+
+
+
+=======
 	ElMessage
 } from 'element-plus'
 
@@ -88,11 +124,72 @@ app.config.globalProperties.$echarts = echarts  //设置全局变量$echarts
 
 //后端项目的URL根路径
 let baseUrl = "http://本地主机IP:8090/emos-api/"
+>>>>>>> 9ce7889 (init commit)
 
 app.config.globalProperties.$baseUrl = baseUrl //设置全局变量$baseUrl
 
 //封装全局Ajax公共函数
 app.config.globalProperties.$http = function(url, method, data, async, fun) {
+<<<<<<< HEAD
+    $.ajax({
+        url: baseUrl + url,
+        type: method,
+        dataType: 'json',
+        contentType: "application/json",
+        xhrFields: {
+            withCredentials: true
+        },
+        headers: {
+            "token": localStorage.getItem("token")
+        },
+        async: async,
+        data: method === "GET" ? data : JSON.stringify(data),
+        success: function(resp) {
+            if (resp.code == 200) {
+                fun(resp.data)
+            } else {
+                if(resp.code == 10010) {
+                    localStorage.removeItem('token');
+                    router.push({ name: 'Login' });
+                }
+                ElMessage.error({
+                    message: resp.msg,
+                    duration: 1200
+                });
+            }
+        },
+        error: function(e) {
+            if (e.status == undefined) {
+
+                ElMessage.error({
+                    message: "前端页面错误",
+                    duration: 1200
+                });
+            } else {
+                let status = e.status
+                if(e.responseJSON?.code==10010){
+                    ElMessage.error({
+                        message: e.responseJSON.msg,
+                        duration: 1200
+                    });
+                    localStorage.removeItem('token');
+                    router.push({ name: 'Login' });
+                }
+                if (status == 401) {
+                    router.push({
+                        name: 'Login'
+                    })
+                } else {
+                    ElMessage.error({
+                        message: e.responseText,
+                        duration: 1200
+                    });
+                }
+            }
+
+        }
+    })
+=======
 	$.ajax({
 		url: baseUrl + url,
 		type: method,
@@ -135,10 +232,22 @@ app.config.globalProperties.$http = function(url, method, data, async, fun) {
 
 		}
 	})
+>>>>>>> 9ce7889 (init commit)
 }
 
 //封装用于判断用户是否具有某些权限的公共函数
 app.config.globalProperties.isAuth = function(permission) {
+<<<<<<< HEAD
+    let permissions = localStorage.getItem("permissions");
+    let flag = false
+    for (let one of permission) {
+        if (permissions.includes(one)) {
+            flag = true
+            break;
+        }
+    }
+    return flag;
+=======
 	let permissions = localStorage.getItem("permissions");
 	let flag = false
 	for (let one of permission) {
@@ -148,6 +257,7 @@ app.config.globalProperties.isAuth = function(permission) {
 		}
 	}
 	return flag;
+>>>>>>> 9ce7889 (init commit)
 }
 
 app.mount('#app')
