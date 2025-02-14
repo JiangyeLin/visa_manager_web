@@ -137,20 +137,20 @@
   </el-row>
 
   <!-- 新增或修改公司信息弹窗 -->
-  <store-add-or-update
+  <customerAdd
     v-if="addOrUpdateVisible"
-    ref="storeAddOrUpdate"
+    ref="customerAdd"
     @refreshDataList="loadDataList"
-  ></store-add-or-update>
+  ></customerAdd>
 </template>
-
 <script>
+
 import { formatDateTime } from "../../utils";
-import storeAddOrUpdate from "../storePage/store-add-or-update.vue";
+import customerAdd from "./customer_add.vue"
 
 export default {
   components: {
-    storeAddOrUpdate,
+    customerAdd,
   },
   data: function () {
     return {
@@ -200,15 +200,14 @@ export default {
 
     addOrUpdate(id) {
       this.addOrUpdateVisible = true;
+      console.log("点击新增")
       this.$nextTick(() => {
-        this.$refs.storeAddOrUpdate.init(id);
+        this.$refs.customerAdd.init(id);
       });
     },
 
     // 加载客户列表数据
     loadDataList() {
-      //if (!this.selectedCompanyId) return;  // 如果没有选中公司，跳出
-
       this.dataListLoading = true;
       let data = {
         companyId: this.selectedCompanyId, // 传递公司ID

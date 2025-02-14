@@ -19,7 +19,11 @@
         <el-input v-model="dataForm.companyNameEn" size="medium" clearable />
       </el-form-item>
       <el-form-item label="法定代表人" prop="legalRepresentative">
-        <el-input v-model="dataForm.legalRepresentative" size="medium" clearable />
+        <el-input
+          v-model="dataForm.legalRepresentative"
+          size="medium"
+          clearable
+        />
       </el-form-item>
       <el-form-item label="地址" prop="address">
         <el-input v-model="dataForm.address" size="medium" clearable />
@@ -75,7 +79,6 @@ export default {
   mounted() {},
   methods: {
     init: function (id) {
-      console.log("init");
       let that = this;
       that.type = id ? "update" : "add";
       that.dataForm.id = id || null;

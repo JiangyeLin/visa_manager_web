@@ -116,6 +116,7 @@
 <script>
 import { formatDateTime } from "../../utils";
 import companySave from "./company_save.vue";
+
 export default {
   components: {
     companySave,
