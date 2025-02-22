@@ -19,9 +19,14 @@
             <el-upload
               class="upload-demo"
               drag
+              :show-file-list="false"
+              :on-change="handlePreview"
+              :http-request="uploadPassport"
               :before-upload="beforeUpload"
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              action="#"
             >
+              <el-image v-if="previewImage" :src="previewImage" :fit="cover" />
+
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <div class="el-upload__text">
                 <em>点击按钮</em>
@@ -128,6 +133,9 @@
 </template>
 
 <script>
+import COS from "cos-js-sdk-v5";
+import { data } from "jquery";
+
 export default {
   data() {
     return {
@@ -148,8 +156,22 @@ export default {
       loading: false,
       dataRule: {},
       debounceSearch: null,
+
+      previewImage: null,
+      tempCredentials: {
+        tmpSecretId: null,
+        tmpSecretKey: null,
+        sessionToken: null,
+        startTime: null,
+        expiredTime: null,
+
+        bucket: "visa-1316966592",
+        region: "ap-guangzhou", // COS 所在的区域
+        objectKey: "your/cos/object/key", // 上传的文件存储路径
+      },
     };
   },
+
   methods: {
     // 初始化方法
     init(id) {
@@ -167,11 +189,28 @@ export default {
         }
       });
     },
-    
-    // 上传图片成功回调
-    handleUploadSuccess(response) {
-      console.log("上传成功")
-      this.dataForm.imageUrl = response.url;
+
+    //获取临时密钥
+    getTemporaryCredentials() {
+      return new Promise((resolve, reject) => {
+        // 假设这里你会通过接口获取临时密钥信息
+        this.$http("cos/getCredential", "GET", null, true, (resp) => {
+          this.tempCredentials.sessionToken = resp.credentials.sessionToken;
+          this.tempCredentials.tmpSecretId = resp.credentials.tmpSecretId;
+          this.tempCredentials.tmpSecretKey = resp.credentials.tmpSecretKey;
+          this.tempCredentials.startTime = resp.startTime;
+          this.tempCredentials.expiredTime = resp.expiredTime;
+
+          this.tempCredentials.bucket = "visa-1316966592";
+          this.tempCredentials.region = "ap-chongqing"; // COS 所在的区域
+
+          resolve();
+        });
+      });
+    },
+
+    handlePreview(file) {
+      this.previewImage = URL.createObjectURL(file.raw);
     },
 
     // 限制上传文件类型为图片
@@ -212,6 +251,43 @@ export default {
       });
     },
 
+    uploadPassport(file) {
+      this.getTemporaryCredentials()
+        .then(() => {
+          console.log("临时密钥获取成功，准备上传");
+          this.uploadFile(file);
+        })
+        .catch((error) => {
+          console.error("获取临时密钥失败", error);
+        });
+    },
+    uploadFile(file) {
+      console.log("开始上传文件");
+      console.log(this.tempCredentials.tmpSecretId);
+      console.log(file.file.name);
+      const cos = new COS({
+        SecretId: this.tempCredentials.tmpSecretId,
+        SecretKey: this.tempCredentials.tmpSecretKey,
+        SecurityToken: this.tempCredentials.sessionToken,
+        StartTime: this.tempCredentials.startTime,
+        ExpiredTime: this.tempCredentials.expiredTime,
+      });
+
+      cos
+        .uploadFile({
+          Bucket: this.tempCredentials.bucket,
+          Region: this.tempCredentials.region,
+          Key: file.file.name,
+          Body: file.file, // 上传文件对象
+        })
+        .then((data) => {
+          console.log("上传成功", data);
+          this.$message.success("上传成功!");
+        })
+        .catch((err) => {
+          console.log("上传失败", err);
+        });
+    },
     // 更新数据
     updateRole() {
       const data = { ...this.dataForm };
@@ -230,5 +306,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.image {
+  color: #8c939d;
+}
 </style>

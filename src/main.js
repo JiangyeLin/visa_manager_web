@@ -31,14 +31,10 @@ import {
 } from 'element-plus'
 
 
-
-
 //挂载ElementUl-Plus插件
 app.use(ElementPlus, {
     locale
 })
-
-
 
 //导入echarts库
 import * as echarts from 'echarts'
@@ -49,8 +45,6 @@ app.config.globalProperties.$echarts = echarts //设置全局变量$echarts
 let baseUrl = "http://localhost:8383/"
 // let baseUrl = "http://192.168.1.21:8080/"
 //let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
-
-
 
 
 app.config.globalProperties.$baseUrl = baseUrl //设置全局变量$baseUrl
