@@ -62,15 +62,12 @@
           width="50"
         />
         <el-table-column
-          prop="familyName,givenName"
+          prop="name"
           header-align="center"
           align="center"
-          label="中文名"
+          label="姓名"
           min-width="170"
         >
-          <template v-slot="scope">
-            {{ scope.row.familyName }} {{ scope.row.givenName }}
-          </template>
         </el-table-column>
         <el-table-column
           prop="familyName"
@@ -108,17 +105,38 @@
           min-width="100"
         />
         <el-table-column
+          prop="passportIssuePlace"
+          header-align="center"
+          align="center"
+          label="签发地"
+          min-width="100"
+        />
+        <el-table-column
+          prop="passportIssueDate"
+          header-align="center"
+          align="center"
+          label="签发日期"
+          min-width="100"
+        />
+        <el-table-column
           prop="passportValidity"
           header-align="center"
           align="center"
           label="护照有效期至"
-          min-width="100"
+          min-width="140"
         />
         <el-table-column
           prop="birthDate"
           header-align="center"
           align="center"
           label="出生日期"
+          min-width="100"
+        />
+        <el-table-column
+          prop="birthPlace"
+          header-align="center"
+          align="center"
+          label="出生地"
           min-width="100"
         />
       </el-table>
@@ -144,9 +162,8 @@
   ></customerAdd>
 </template>
 <script>
-
 import { formatDateTime } from "../../utils";
-import customerAdd from "./customer_add.vue"
+import customerAdd from "./customer_add.vue";
 
 export default {
   components: {
@@ -189,7 +206,7 @@ export default {
         //取消选中
         this.selectedCompanyId = null;
         //this.$refs.tree.setCheckedKeys([])
-        this.$refs.tree.setCurrentKey(null)
+        this.$refs.tree.setCurrentKey(null);
       } else {
         this.selectedCompanyId = nodeData.id;
       }
@@ -200,7 +217,7 @@ export default {
 
     addOrUpdate(id) {
       this.addOrUpdateVisible = true;
-      console.log("点击新增")
+      console.log("点击新增");
       this.$nextTick(() => {
         this.$refs.customerAdd.init(id);
       });
@@ -223,6 +240,7 @@ export default {
           return {
             ...item,
             birthDate: formatDateTime(item.birthDate),
+            passportIssueDate: formatDateTime(item.passportIssueDate),
             passportValidity: formatDateTime(item.passportValidity),
           };
         });

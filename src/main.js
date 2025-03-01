@@ -17,13 +17,11 @@ const app = createApp(App) //创建VUE对象
 import router from './router'
 app.use(router) //挂载路由插件
 
-
-
-
 //导入ElementUI
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import locale from 'element-plus/lib/locale/lang/zh-CN'
+
 
 //导入ElementUI的消息通知组件，下面封装全局Ajax的时候处理异常的时候需要弹出通知
 import {
@@ -42,9 +40,9 @@ app.config.globalProperties.$echarts = echarts //设置全局变量$echarts
 
 
 //后端项目的URL根路径
-let baseUrl = "http://localhost:8383/"
+//let baseUrl = "http://localhost:8383/"
 // let baseUrl = "http://192.168.1.21:8080/"
-//let baseUrl = 'http://39.174.196.100:8080/'	//正式环境
+let baseUrl = 'http://visa.migao.life:8383/'	//正式环境
 
 
 app.config.globalProperties.$baseUrl = baseUrl //设置全局变量$baseUrl

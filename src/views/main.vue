@@ -9,7 +9,7 @@
                 <h1 class="site-navbar__brand">
                     
                     <a class="site-navbar__brand-lg">签证管理系统</a>
-                    <a class="site-navbar__brand-mini">OA</a>
+                    <a class="site-navbar__brand-mini">VISA</a>
                 </h1>
             </div>
             <div class="site-navbar__body clearfix">

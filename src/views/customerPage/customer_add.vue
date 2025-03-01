@@ -13,21 +13,25 @@
       label-width="120px"
     >
       <!-- 上传图片 -->
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="护照照片" prop="imageUrl">
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="护照照片" prop="photo">
             <el-upload
-              class="upload-demo"
               drag
               :show-file-list="false"
+              :limit="1"
               :on-change="handlePreview"
               :http-request="uploadPassport"
               :before-upload="beforeUpload"
               action="#"
             >
-              <el-image v-if="previewImage" :src="previewImage" :fit="cover" />
-
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div v-if="previewImage">
+                <el-image :src="previewImage" :fit="cover" />
+                <em>删除</em>
+                <em>预览</em>
+              </div>
+         
+              <el-icon><Plus /></el-icon>
               <div class="el-upload__text">
                 <em>点击按钮</em>
                 或拖拽护照图片至此处上传
@@ -38,7 +42,19 @@
       </el-row>
 
       <!-- 中文名字段：姓 + 名 -->
-      <el-row :gutter="20">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="dataForm.name" size="medium" clearable />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="手机号" prop="phoneNumber">
+            <el-input v-model="dataForm.phoneNumber" size="medium" clearable />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
           <el-form-item label="姓" prop="familyName">
             <el-input v-model="dataForm.familyName" size="medium" clearable />
@@ -61,46 +77,14 @@
               placeholder="请选择性别"
               clearable
             >
-              <el-option label="男" value="男" />
-              <el-option label="女" value="女" />
+              <el-option label="男" value="M" />
+              <el-option label="女" value="F" />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <!-- 手机号 -->
-      <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="手机号" prop="phoneNumber">
-            <el-input v-model="dataForm.phoneNumber" size="medium" clearable />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <!-- 护照编号 -->
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="护照编号" prop="passportNumber">
-            <el-input
-              v-model="dataForm.passportNumber"
-              size="medium"
-              clearable
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <!-- 护照有效期至 -->
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="护照有效期至" prop="passportValidity">
-            <el-date-picker
-              v-model="dataForm.passportValidity"
-              type="date"
-              placeholder="选择日期"
-              size="medium"
-              clearable
-            />
+          <el-form-item label="国籍" prop="nationality">
+            <el-input v-model="dataForm.nationality" size="medium" clearable />
           </el-form-item>
         </el-col>
       </el-row>
@@ -118,23 +102,82 @@
             />
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="出生地点" prop="birthPlace">
+            <el-input
+              v-model="dataForm.birthPlace"
+              placeholder="请输入出生地"
+              size="medium"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
       </el-row>
 
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button size="medium" @click="visible = false">取消</el-button>
-          <el-button type="primary" size="medium" @click="dataFormSubmit"
-            >确定</el-button
-          >
-        </span>
-      </template>
+      <!-- 护照编号 -->
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="护照编号" prop="passportNumber">
+            <el-input
+              v-model="dataForm.passportNumber"
+              size="medium"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="签发地" prop="passportIssuePlace">
+            <el-input
+              v-model="dataForm.passportIssuePlace"
+              placeholder="请输入护照签发地"
+              size="medium"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- 护照有效期至 -->
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="签发日期" prop="passportIssueDate">
+            <el-date-picker
+              v-model="dataForm.passportIssueDate"
+              type="date"
+              placeholder="选择日期"
+              size="medium"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="护照有效期至" prop="passportValidity">
+            <el-date-picker
+              v-model="dataForm.passportValidity"
+              type="date"
+              placeholder="选择日期"
+              size="medium"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button size="medium" @click="visible = false">取消</el-button>
+        <el-button type="primary" size="medium" @click="dataFormSubmit"
+          >确定</el-button
+        >
+      </span>
+    </template>
   </el-dialog>
 </template>
 
 <script>
+
 import COS from "cos-js-sdk-v5";
-import { data } from "jquery";
 
 export default {
   data() {
@@ -142,22 +185,34 @@ export default {
       visible: false,
       dataForm: {
         id: null,
+
+        name: null, //姓名
         familyName: null, // 姓
         givenName: null, // 名
         gender: null, // 性别
         phoneNumber: null, // 手机号
+
+        nationality: null, //国籍
+
         passportNumber: null, // 护照编号
         passportValidity: null, // 护照有效期
+        passportIssuePlace: null, //护照签发地
+        passportIssueDate: null, //护照签发时间
+
         birthDate: null, // 出生日期
-        imageUrl: null, // 图片链接
+        birthPlace: null, // 出生地点
+
+        photo: null, // 图片链接
       },
+
       type: null,
-      userList: null,
       loading: false,
       dataRule: {},
       debounceSearch: null,
 
       previewImage: null,
+      previewSrcList: [],
+
       tempCredentials: {
         tmpSecretId: null,
         tmpSecretKey: null,
@@ -178,6 +233,7 @@ export default {
       this.type = id ? "update" : "add";
       this.dataForm.id = id || null;
       this.visible = true;
+      this.previewImage = null;
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
         if (this.dataForm.id) {
@@ -212,6 +268,16 @@ export default {
     handlePreview(file) {
       this.previewImage = URL.createObjectURL(file.raw);
     },
+    handlePictureCardPreview(file) {
+      console.log("点击预览");
+      //把用户点击的那张图片放到第一个位置,这样打开就能看到自己点击的那张图片
+      this.previewSrcList = this.fileList
+        .filter((e) => e.url !== file.url)
+        .map((e) => e.url);
+      this.previewSrcList.unshift(file.url);
+      //设置 图片查看器 进行显示
+      this.imgViewerVisible = true;
+    },
 
     // 限制上传文件类型为图片
     beforeUpload(file) {
@@ -240,7 +306,7 @@ export default {
     // 保存数据
     save() {
       const data = { ...this.dataForm };
-      this.$http("company/update", "POST", data, true, () => {
+      this.$http("customer/update", "POST", data, true, () => {
         this.$message({
           message: "操作成功",
           type: "success",
@@ -252,6 +318,9 @@ export default {
     },
 
     uploadPassport(file) {
+      if (true) {
+        return;
+      }
       this.getTemporaryCredentials()
         .then(() => {
           console.log("临时密钥获取成功，准备上传");
@@ -282,12 +351,26 @@ export default {
         })
         .then((data) => {
           console.log("上传成功", data);
+          console.log("图片路径", data.Location);
           this.$message.success("上传成功!");
+
+          this.ocrPassport("https://" + data.Location);
         })
         .catch((err) => {
           console.log("上传失败", err);
         });
     },
+    ocrPassport(url) {
+      let data = {
+        passportUrl: url, // 护照url
+      };
+      this.$http("cos/passportOcr", "POST", data, true, (resp) => {
+        this.dataForm = resp;
+        this.$message.success("护照识别成功!");
+        this.dataForm.photo = url;
+      });
+    },
+
     // 更新数据
     updateRole() {
       const data = { ...this.dataForm };
