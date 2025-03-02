@@ -13,28 +13,43 @@
       label-width="120px"
     >
       <!-- 上传图片 -->
-      <el-row>
-        <el-col :span="24">
+      <el-row span="24">
+        <el-col>
           <el-form-item label="护照照片" prop="photo">
             <el-upload
               drag
               :show-file-list="false"
-              :limit="1"
-              :on-change="handlePreview"
+              :on-change="handleTempPreview"
               :http-request="uploadPassport"
               :before-upload="beforeUpload"
+              class="custom-upload"
               action="#"
+              :disabled="tempImageURL"
             >
-              <div v-if="previewImage">
-                <el-image :src="previewImage" :fit="cover" />
-                <em>删除</em>
-                <em>预览</em>
+              <div v-if="tempImageURL" class="image-container">
+                <el-image
+                  ref="previewImageRef"
+                  :src="tempImageURL"
+                  :hide-on-click-modal="true"
+                  fit="cover"
+                  class="preview-image"
+                  :preview-src-list="[tempImageURL]"
+                />
+                <div class="action-overlay">
+                  <i
+                    class="el-icon-zoom-in"
+                    @click.stop="handleImagePreview"
+                  ></i>
+                  <i class="el-icon-delete" @click.stop="handleRemoveImage"></i>
+                </div>
               </div>
-         
-              <el-icon><Plus /></el-icon>
-              <div class="el-upload__text">
-                <em>点击按钮</em>
-                或拖拽护照图片至此处上传
+
+              <div v-if="!tempImageURL" class="upload-text-container">
+                <i class="el-icon-UploadFilled"></i>
+                <div class="el-upload__text">
+                  <em>点击按钮</em>
+                  或拖拽护照图片至此处上传
+                </div>
               </div>
             </el-upload>
           </el-form-item>
@@ -176,7 +191,6 @@
 </template>
 
 <script>
-
 import COS from "cos-js-sdk-v5";
 
 export default {
@@ -210,7 +224,7 @@ export default {
       dataRule: {},
       debounceSearch: null,
 
-      previewImage: null,
+      tempImageURL: null,
       previewSrcList: [],
 
       tempCredentials: {
@@ -222,7 +236,6 @@ export default {
 
         bucket: "visa-1316966592",
         region: "ap-guangzhou", // COS 所在的区域
-        objectKey: "your/cos/object/key", // 上传的文件存储路径
       },
     };
   },
@@ -233,7 +246,7 @@ export default {
       this.type = id ? "update" : "add";
       this.dataForm.id = id || null;
       this.visible = true;
-      this.previewImage = null;
+      this.tempImageURL = null;
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
         if (this.dataForm.id) {
@@ -265,20 +278,15 @@ export default {
       });
     },
 
-    handlePreview(file) {
-      this.previewImage = URL.createObjectURL(file.raw);
+    handleImagePreview() {
+      // 触发 el-image 的点击事件以显示预览
+      if (this.$refs.previewImageRef) {
+        this.$refs.previewImageRef.clickHandler();
+      }
     },
-    handlePictureCardPreview(file) {
-      console.log("点击预览");
-      //把用户点击的那张图片放到第一个位置,这样打开就能看到自己点击的那张图片
-      this.previewSrcList = this.fileList
-        .filter((e) => e.url !== file.url)
-        .map((e) => e.url);
-      this.previewSrcList.unshift(file.url);
-      //设置 图片查看器 进行显示
-      this.imgViewerVisible = true;
+    handleTempPreview(file) {
+      this.tempImageURL = URL.createObjectURL(file.raw);
     },
-
     // 限制上传文件类型为图片
     beforeUpload(file) {
       const isImage = file.type.startsWith("image/");
@@ -316,14 +324,18 @@ export default {
         this.$emit("refreshDataList");
       });
     },
+    handleRemoveImage() {
+      this.tempImageURL = null;
+      this.dataForm = {};
+    },
 
+    /**
+     * 上传护照
+     * @param file
+     */
     uploadPassport(file) {
-      if (true) {
-        return;
-      }
       this.getTemporaryCredentials()
         .then(() => {
-          console.log("临时密钥获取成功，准备上传");
           this.uploadFile(file);
         })
         .catch((error) => {
@@ -350,16 +362,18 @@ export default {
           Body: file.file, // 上传文件对象
         })
         .then((data) => {
-          console.log("上传成功", data);
-          console.log("图片路径", data.Location);
           this.$message.success("上传成功!");
-
           this.ocrPassport("https://" + data.Location);
         })
         .catch((err) => {
           console.log("上传失败", err);
         });
     },
+
+    /**
+     * 护照识别ocr
+     * @param url
+     */
     ocrPassport(url) {
       let data = {
         passportUrl: url, // 护照url
@@ -389,7 +403,68 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.image {
-  color: #8c939d;
+.image-container {
+  position: relative; /* 作为绝对定位子元素的参考 */
+  display: inline-block;
+  width: 100%; /* 确保容器宽度与图片一致 */
+  height: 100%;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%; /* 固定高度或根据需求调整 */
+  display: block; /* 避免图片下方间隙 */
+}
+
+.action-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 30px;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.3); /* 半透明背景（可选） */
+  opacity: 0; /* 默认隐藏 */
+  transition: opacity 0.3s;
+  z-index: 2; /* 确保按钮在图片上层 */
+}
+
+/* 悬停时显示操作按钮 */
+.image-container:hover .action-overlay {
+  opacity: 1;
+}
+
+/* 调整图标样式*/
+.el-icon-zoom-in,
+.el-icon-delete {
+  color: white;
+  font-size: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px;
+  border-radius: 50%;
+  margin: 8px;
+  cursor: pointer;
+  z-index: 3; /* 确保按钮图标在最上层 */
+}
+
+.custom-upload :deep(.el-upload) {
+  width: 100%;
+  height: 260px;
+  display: block;
+}
+.custom-upload :deep(.el-upload-dragger) {
+  width: 100%;
+  height: 100%;
+}
+.upload-text-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
 }
 </style>
