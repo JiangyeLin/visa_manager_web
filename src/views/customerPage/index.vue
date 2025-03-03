@@ -52,6 +52,7 @@
         stripe
         v-loading="dataListLoading"
         :cell-style="{ padding: '4px 0' }"
+        @cell-dblclick="doubleClick"
         size="medium"
         style="width: 100%"
       >
@@ -281,7 +282,6 @@ export default {
           };
         });
 
-        console.log(this.dataList);
         this.totalCount = resp.total;
         this.dataListLoading = false;
       });
@@ -307,6 +307,16 @@ export default {
       });
     },
 
+    doubleClick(row, column, cell, event) {
+      // 双击复制
+      const textToCopy = event.target.innerText;
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          this.$message({ message: "复制成功", type: "success" }); // 提示
+        })
+        .catch((error) => {});
+    },
     searchHandle() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
