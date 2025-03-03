@@ -36,7 +36,6 @@
         align="center"
         width="50"
       />
-      <!-- <el-table-column prop="id" header-align="center" align="center" label="用户ID" min-width="200" fixed /> -->
       <el-table-column
         prop="companyNameCn"
         header-align="center"

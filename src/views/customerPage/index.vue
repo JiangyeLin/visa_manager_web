@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <!-- 左侧树形组件（公司信息） -->
-    <el-col :span="6" style="height: 100vh; overflow-y: auto; padding: 10px">
+    <el-col :span="6" style="height: 100vh; overflow-y: auto; padding: 8px">
       <el-tree
         :data="companyTreeData"
         :props="treeProps"
@@ -84,6 +84,14 @@
           min-width="100"
         />
         <el-table-column
+          prop="companyName"
+          header-align="center"
+          align="center"
+          label="所属公司"
+          min-width="150"
+        >
+        </el-table-column>
+        <el-table-column
           prop="gender"
           header-align="center"
           align="center"
@@ -139,6 +147,18 @@
           label="出生地"
           min-width="100"
         />
+        <el-table-column fixed="right" label="操作" align="center">
+          <template #default="scope">
+            <el-popconfirm
+              title="确认删除此客户?"
+              @confirm="deleteCustomer(scope.row.id)"
+            >
+              <template #reference>
+                <el-button link type="primary" size="small">删除</el-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
       </el-table>
 
       <!-- 分页 -->
@@ -192,6 +212,22 @@ export default {
       selectedCompanyId: null, // 当前选中的公司ID
     };
   },
+  computed: {
+    // 将公司树数据转换为 id -> companyName 的映射
+    companyNameMap() {
+      const map = {};
+      const traverse = (nodes) => {
+        nodes.forEach((node) => {
+          map[node.id] = node.companyNameCn; // 假设 companyNameCn 是公司名称字段
+          if (node.children && node.children.length > 0) {
+            traverse(node.children);
+          }
+        });
+      };
+      traverse(this.companyTreeData);
+      return map;
+    },
+  },
   methods: {
     // 加载公司树
     loadCompanyTree() {
@@ -217,7 +253,6 @@ export default {
 
     addOrUpdate(id) {
       this.addOrUpdateVisible = true;
-      console.log("点击新增");
       this.$nextTick(() => {
         this.$refs.customerAdd.init(id);
       });
@@ -242,11 +277,33 @@ export default {
             birthDate: formatDateTime(item.birthDate),
             passportIssueDate: formatDateTime(item.passportIssueDate),
             passportValidity: formatDateTime(item.passportValidity),
+            companyName: this.companyNameMap[item.companyId] || null,
           };
         });
 
+        console.log(this.dataList);
         this.totalCount = resp.total;
         this.dataListLoading = false;
+      });
+    },
+
+    //删除客户
+    deleteCustomer(id) {
+      let that = this;
+      that.dataListLoading = true;
+      let data = {
+        id: id,
+      };
+
+      that.$http("customer/delete", "DELETE", data, true, function (resp) {
+        that.$message({
+          message: "操作成功",
+          type: "success",
+          duration: 1200,
+        });
+        that.dataListLoading = false;
+
+        that.loadDataList(); // 刷新表格数据
       });
     },
 

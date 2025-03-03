@@ -178,6 +178,26 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item label="所属公司" prop="principalId">
+        <el-select
+          v-model="dataForm.companyId"
+          size="medium"
+          placeholder="查询所属公司"
+          style="width: 100%"
+          filterable
+          remote
+          remote-show-suffix
+          :remote-method="debounceSearch"
+          clearable
+        >
+          <el-option
+            v-for="item in companyList"
+            :key="item.id"
+            :label="item.companyNameCn"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -192,7 +212,7 @@
 
 <script>
 import COS from "cos-js-sdk-v5";
-
+import { debounce } from "../../utils";
 export default {
   data() {
     return {
@@ -217,6 +237,8 @@ export default {
         birthPlace: null, // 出生地点
 
         photo: null, // 图片链接
+
+        companyId: null, //所属公司
       },
 
       type: null,
@@ -226,6 +248,8 @@ export default {
 
       tempImageURL: null,
       previewSrcList: [],
+
+      companyList: [],
 
       tempCredentials: {
         tmpSecretId: null,
@@ -239,7 +263,10 @@ export default {
       },
     };
   },
-
+  mounted() {
+    this.debounceSearch = debounce(this.remoteMethod, 300);
+    this.remoteMethod(null);
+  },
   methods: {
     // 初始化方法
     init(id) {
@@ -296,6 +323,16 @@ export default {
       return isImage;
     },
 
+    //远程查找所属公司
+    remoteMethod(value) {
+      let that = this;
+      let data = {
+        keyword: value,
+      };
+      that.$http("company/list", "POST", data, true, function (resp) {
+        that.companyList = resp.records;
+      });
+    },
     // 提交表单
     dataFormSubmit() {
       this.loading = true;
@@ -358,7 +395,7 @@ export default {
         .uploadFile({
           Bucket: this.tempCredentials.bucket,
           Region: this.tempCredentials.region,
-          Key: file.file.name,
+          Key: this.generateUniqueKey(file.file.name),
           Body: file.file, // 上传文件对象
         })
         .then((data) => {
@@ -382,6 +419,9 @@ export default {
         this.dataForm = resp;
         this.$message.success("护照识别成功!");
         this.dataForm.photo = url;
+      }).catch((error) => {
+        console.error("OCR识别失败", error);
+        this.$message.error("护照识别失败，请手动填写信息");
       });
     },
 
@@ -397,6 +437,12 @@ export default {
         this.visible = false;
         this.$emit("refreshDataList");
       });
+    },
+    generateUniqueKey(fileName) {
+      const timestamp = Date.now(); // 获取当前时间戳
+      const randomString = Math.random().toString(36).substring(2, 8); // 生成6位随机字符串
+      const extension = fileName.split(".").pop(); // 获取文件扩展名
+      return `${timestamp}_${randomString}.${extension}`;
     },
   },
 };
