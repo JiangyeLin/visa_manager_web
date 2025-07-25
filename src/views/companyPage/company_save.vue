@@ -25,7 +25,7 @@
           clearable
         />
       </el-form-item>
-      <el-form-item label="地址" prop="address">
+      <el-form-item label="注册地址" prop="address">
         <el-input v-model="dataForm.address" size="medium" clearable />
       </el-form-item>
       <el-form-item label="统一社会信用代码" prop="unifiedSocialCreditCode">
@@ -86,10 +86,8 @@ export default {
       that.$nextTick(() => {
         that.$refs["dataForm"].resetFields();
         if (that.dataForm.id) {
-          that.$http("admin/role/" + id, "GET", null, true, function (resp) {
-            that.dataForm.name = resp.name;
-            that.dataForm.permissions = resp.permissions.map(Number);
-            that.dataForm.desc = resp.desc;
+          this.$http(`company/info/${id}`, "GET", null, true, (res) => {
+            that.dataForm = res;
           });
         }
       });
@@ -99,11 +97,12 @@ export default {
       that.loading = true;
       that.$refs["dataForm"].validate(function (valid) {
         if (valid) {
-          if (that.type === "add") {
+          /*  if (that.type === "add") {
             that.save();
           } else {
             that.updateRole();
-          }
+          } */
+          that.save();
         }
       });
       that.loading = false;
@@ -120,24 +119,6 @@ export default {
         legalRepresentative: that.dataForm.legalRepresentative,
       };
       that.$http(`company/update`, "POST", data, true, function (resp) {
-        that.$message({
-          message: "操作成功",
-          type: "success",
-          duration: 1200,
-        });
-        that.visible = false;
-        that.$emit("refreshDataList");
-      });
-    },
-    updateRole() {
-      let that = this;
-      let data = {
-        id: that.dataForm.id,
-        name: that.dataForm.name,
-        permissions: that.dataForm.permissions,
-        desc: that.dataForm.desc,
-      };
-      that.$http(`admin/role`, "PUT", data, true, function (resp) {
         that.$message({
           message: "操作成功",
           type: "success",

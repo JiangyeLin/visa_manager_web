@@ -81,14 +81,36 @@
         label="注册日期"
         min-width="100"
       />
-      <el-table-column fixed="right" label="操作" align="center">
+      <el-table-column fixed="right" label="操作" align="center" width="180">
         <template #default="scope">
+          <!-- 新增的编辑按钮 -->
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="addOrUpdate(scope.row.id)"
+            :disabled="!isAuth(['ROOT', 'STORE:UPDATE'])"
+          >
+            编辑
+          </el-button>
+
+          <!-- 分隔竖线 -->
+          <el-divider direction="vertical" />
+
+          <!-- 原有的删除按钮 -->
           <el-popconfirm
             title="确认删除此公司?"
             @confirm="deleteCompany(scope.row.id)"
           >
             <template #reference>
-              <el-button link type="primary" size="small">删除</el-button>
+              <el-button
+                link
+                type="primary"
+                size="small"
+                :disabled="!isAuth(['ROOT', 'STORE:DELETE'])"
+              >
+                删除
+              </el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -141,7 +163,7 @@ export default {
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         if (this.$refs.companySave) {
-          this.$refs.companySave.init();
+          this.$refs.companySave.init(id);
         }
       });
     },

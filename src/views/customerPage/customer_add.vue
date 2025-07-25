@@ -277,10 +277,11 @@ export default {
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
         if (this.dataForm.id) {
-          this.$http("admin/role/" + id, "GET", null, true, (resp) => {
-            this.dataForm.name = resp.name;
-            this.dataForm.permissions = resp.permissions.map(Number);
-            this.dataForm.desc = resp.desc;
+          this.$http(`customer/${id}`, "GET", null, true, (res) => {
+            this.dataForm = res;
+            if (res.photo) {
+              this.tempImageURL = res.photo;
+            }
           });
         }
       });
@@ -341,7 +342,7 @@ export default {
           if (this.type === "add") {
             this.save();
           } else {
-            this.updateRole();
+             this.update();
           }
         }
       });
@@ -350,6 +351,19 @@ export default {
 
     // 保存数据
     save() {
+      const data = { ...this.dataForm };
+      this.$http("customer/save", "POST", data, true, () => {
+        this.$message({
+          message: "操作成功",
+          type: "success",
+          duration: 1200,
+        });
+        this.visible = false;
+        this.$emit("refreshDataList");
+      });
+    },
+
+    update() {
       const data = { ...this.dataForm };
       this.$http("customer/update", "POST", data, true, () => {
         this.$message({
@@ -361,6 +375,7 @@ export default {
         this.$emit("refreshDataList");
       });
     },
+
     handleRemoveImage() {
       this.tempImageURL = null;
       this.dataForm = {};
@@ -425,19 +440,6 @@ export default {
       });
     },
 
-    // 更新数据
-    updateRole() {
-      const data = { ...this.dataForm };
-      this.$http("admin/role", "PUT", data, true, () => {
-        this.$message({
-          message: "操作成功",
-          type: "success",
-          duration: 1200,
-        });
-        this.visible = false;
-        this.$emit("refreshDataList");
-      });
-    },
     generateUniqueKey(fileName) {
       const timestamp = Date.now(); // 获取当前时间戳
       const randomString = Math.random().toString(36).substring(2, 8); // 生成6位随机字符串

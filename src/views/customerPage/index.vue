@@ -1,8 +1,8 @@
 <template>
   <el-row>
     <!-- 左侧树形组件（公司信息） -->
-    <el-col :span="6" style="height: 100vh; overflow-y: auto; padding: 8px">
-      <el-tree
+    <el-col :span="4" style="height: 100vh; overflow-y: auto; padding: 8px">
+       <el-tree
         :data="companyTreeData"
         :props="treeProps"
         @node-click="onNodeClick"
@@ -11,13 +11,24 @@
         node-key="id"
         ref="tree"
         :expand-on-click-node="false"
-        style="max-height: 100%; overflow-y: auto"
+        style="max-height: 100%; overflow-y: auto; padding: 12px;"
+        class="custom-tree"
       >
+        <template #default="{ node, data }">
+          <div class="custom-tree-node">
+            <span :class="['node-label', { 'current-node': node.isCurrent }]">
+              {{ node.label }}
+            </span>
+            <span v-if="node.expanded" class="node-count" @click.stop>
+              ({{ data.children ? data.children.length : 0 }})
+            </span>
+          </div>
+        </template>
       </el-tree>
     </el-col>
 
     <!-- 右侧表格组件（客户数据） -->
-    <el-col :span="18" style="height: 100vh; overflow-y: auto; padding: 10px">
+    <el-col :span="20" style="height: 100vh; overflow-y: auto; padding: 10px">
       <el-form
         :inline="true"
         :model="dataForm"
@@ -148,8 +159,22 @@
           label="出生地"
           min-width="100"
         />
-        <el-table-column fixed="right" label="操作" align="center">
+        <el-table-column fixed="right" label="操作" align="center" width="180">
           <template #default="scope">
+            <!-- 新增的编辑按钮 -->
+            <el-button
+              link
+              type="primary"
+              size="small"
+              @click="addOrUpdate(scope.row.id)"
+              :disabled="!isAuth(['ROOT', 'STORE:UPDATE'])"
+            >
+              编辑
+            </el-button>
+
+            <!-- 分隔竖线 -->
+            <el-divider direction="vertical" />
+
             <el-popconfirm
               title="确认删除此客户?"
               @confirm="deleteCustomer(scope.row.id)"
@@ -356,34 +381,72 @@ export default {
   padding: 20px;
 }
 
-.el-tree {
+/* 左侧树形组件优化样式 */
+:deep(.custom-tree) {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.el-tree .el-tree-node__content {
-  padding: 12px 16px; /* 增加内边距 */
-  background-color: #f8f8f8;
-  border-radius: 8px;
+:deep(.custom-tree .el-tree-node) {
   margin-bottom: 8px;
-  line-height: 36px; /* 增加行高 */
-  font-size: 14px; /* 可选：根据需要调整字体大小 */
 }
 
-.el-tree .el-tree-node__content:hover {
-  background-color: #e6f7ff;
+:deep(.custom-tree-node) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
-.el-tree .el-tree-node__content.is-current {
-  background-color: #1890ff;
-  color: white;
+:deep(.custom-tree-node:hover) {
+  background-color: #f5f7fa;
 }
 
-/* 优化左侧树的高亮和选中效果 */
-.el-tree .el-tree-node.is-current > .el-tree-node__content {
-  background-color: #1890ff;
-  color: white;
+:deep(.node-label) {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:deep(.current-node .node-label) {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+:deep(.node-count) {
+  font-size: 12px;
+  color: #909399;
+  background-color: #f0f2f5;
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-left: 8px;
+}
+
+/* 选中状态样式 */
+:deep(.el-tree-node.is-current > .el-tree-node__content) {
+  background-color: #e6f7ff !important;
+  border-left: 3px solid #1890ff;
+}
+
+/* 滚动条优化 */
+:deep(.el-tree)::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+:deep(.el-tree)::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: #c1c1c1;
+}
+
+:deep(.el-tree)::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* 右侧表格区域优化 */
